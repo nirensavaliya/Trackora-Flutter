@@ -66,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+    <string>Trackora needs the camera to verify your face for punch in.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Trackora uses location to place your office on the map and set a geofence.</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>
