@@ -24,6 +24,8 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
             children: const [
               _PunchInCard(),
+              SizedBox(height: 12),
+              _TodayStatusCard(),
               SizedBox(height: 24),
               _OverviewHeader(),
               SizedBox(height: 12),
@@ -152,6 +154,49 @@ class _HomeHeader extends StatelessWidget implements PreferredSizeWidget {
 }
 
 
+class _TodayStatusCard extends StatelessWidget {
+  const _TodayStatusCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final home = context.watch<HomeProvider>();
+    final label = home.attendanceStatusLabel;
+    final isPresent = label == 'PRESENT';
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 16),
+      decoration: BoxDecoration(
+        color: AppColors.cardWhite,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Today',
+            style: TextStyle(
+              fontFamily: 'Inter_Regular',
+              color: AppColors.textGrey,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Inter_Bold',
+              color: isPresent ? AppColors.appColor : AppColors.textDark,
+              fontSize: 22,
+              letterSpacing: 0.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _PunchInCard extends StatelessWidget {
   const _PunchInCard();
 
@@ -160,6 +205,9 @@ class _PunchInCard extends StatelessWidget {
     final home = context.watch<HomeProvider>();
     if (home.isPunchedIn) {
       return const _PunchedInCard();
+    }
+    if (home.isPunchedOut) {
+      return const _PunchedOutCard();
     }
     return const _NotPunchedInCard();
   }
@@ -199,7 +247,7 @@ class _PunchedInCard extends StatelessWidget {
           ),
           const SizedBox(height: 18),
           Text(
-            home.currentClock,
+            home.punchInClock,
             style: const TextStyle(
               fontFamily: 'Inter_Bold',
               color: Colors.white,
@@ -240,6 +288,81 @@ class _PunchedInCard extends StatelessWidget {
                   fontSize: 14,
                   letterSpacing: 0.8,
                 ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PunchedOutCard extends StatelessWidget {
+  const _PunchedOutCard();
+
+  @override
+  Widget build(BuildContext context) {
+    final home = context.watch<HomeProvider>();
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
+      decoration: BoxDecoration(
+        color: AppColors.appColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        children: [
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.circle, color: Color(0xFF7DFFB3), size: 10),
+              SizedBox(width: 8),
+              Text(
+                'PUNCHED OUT',
+                style: TextStyle(
+                  fontFamily: 'Inter_Bold',
+                  color: Colors.white,
+                  fontSize: 13,
+                  letterSpacing: 1.1,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          Text(
+            home.punchOutClock,
+            style: const TextStyle(
+              fontFamily: 'Inter_Bold',
+              color: Colors.white,
+              fontSize: 40,
+              height: 1,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Worked ${home.workingDuration}',
+            style: const TextStyle(
+              fontFamily: 'Inter_Regular',
+              color: Colors.white,
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.16),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.45)),
+            ),
+            child: const Text(
+              'DAY CLOSED',
+              style: TextStyle(
+                fontFamily: 'Inter_SemiBold',
+                color: Colors.white,
+                fontSize: 12,
+                letterSpacing: 1,
               ),
             ),
           ),
@@ -374,23 +497,45 @@ class _OverviewRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final home = context.watch<HomeProvider>();
-    return Row(
+    return Column(
+      // crossAxisAlignment: CrossAxisAlignment.center,
+      // mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: _StatCard(
-            icon: Icons.assignment_outlined,
-            value: '${home.taskCount}',
-            label: 'Tasks',
-          ),
+        Row(
+          children: [
+            Expanded(
+              child: _StatCard(
+                icon: Icons.today_outlined,
+                value: '${home.todayCount}',
+                label: 'Today Tasks',
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _StatCard(
+                icon: Icons.warning_amber_outlined,
+                value: '${home.overdueCount}',
+                label: 'Overdue',
+              ),
+            ),
+            // const SizedBox(width: 10),
+            // Expanded(
+            //   child: _StatCard(
+            //     icon: Icons.assignment_outlined,
+            //     value: '${home.unsolvedCount}',
+            //     label: 'Past Unsolved',
+            //   ),
+            // ),
+          ],
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _StatCard(
-            icon: Icons.location_on_outlined,
-            value: '${home.visitCount}',
-            label: 'Visits',
-          ),
-        ),
+            Align(
+              alignment: Alignment.center,
+              child: _StatCard(
+                  icon: Icons.assignment_outlined,
+                  value: '${home.unsolvedCount}',
+                  label: 'Past Unsolved',
+                ),
+            ),
       ],
     );
   }
@@ -410,7 +555,8 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
       decoration: BoxDecoration(
         color: AppColors.cardWhite,
         borderRadius: BorderRadius.circular(14),
@@ -418,8 +564,8 @@ class _StatCard extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            width: 40,
-            height: 40,
+            width: 36,
+            height: 36,
             decoration: BoxDecoration(
               color: AppColors.appColor,
               borderRadius: BorderRadius.circular(10),
@@ -440,10 +586,12 @@ class _StatCard extends StatelessWidget {
               ),
               Text(
                 label,
+                textAlign: TextAlign.center,
+                maxLines: 1,
                 style: const TextStyle(
                   fontFamily: 'Inter_Regular',
                   color: AppColors.textGrey,
-                  fontSize: 13,
+                  fontSize: 12,
                 ),
               ),
             ],
@@ -460,59 +608,44 @@ class _TargetCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final home = context.watch<HomeProvider>();
-    final percent = (home.targetPercent * 100).round();
 
     return Container(
+      width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.cardWhite,
         borderRadius: BorderRadius.circular(14),
       ),
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              const Text(
-                "Today's Target",
-                style: TextStyle(
-                  fontFamily: 'Inter_SemiBold',
-                  color: AppColors.textDark,
-                  fontSize: 15,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '$percent%',
-                style: const TextStyle(
-                  fontFamily: 'Inter_SemiBold',
-                  color: AppColors.textDark,
-                  fontSize: 15,
-                ),
-              ),
-            ],
+          const Text(
+            'Net Pay',
+            style: TextStyle(
+              fontFamily: 'Inter_SemiBold',
+              color: AppColors.textDark,
+              fontSize: 15,
+            ),
           ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: LinearProgressIndicator(
-              value: home.targetPercent,
-              minHeight: 8,
-              backgroundColor: AppColors.progressTrack,
+          const SizedBox(height: 8),
+          Text(
+            home.netPayText, // ₹80,000
+            style: const TextStyle(
+              fontFamily: 'Inter_Bold',
               color: AppColors.appColor,
+              fontSize: 28,
             ),
           ),
-          const SizedBox(height: 10),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              '${home.targetDone} / ${home.targetTotal}',
-              style: const TextStyle(
-                fontFamily: 'Inter_Regular',
-                color: AppColors.textGrey,
-                fontSize: 13,
-              ),
-            ),
-          ),
+          // const SizedBox(height: 4),
+          // Text(
+          //   'This month',
+          //   style: const TextStyle(
+          //     fontFamily: 'Inter_Regular',
+          //     color: AppColors.textGrey,
+          //     fontSize: 13,
+          //   ),
+          // ),
         ],
       ),
     );

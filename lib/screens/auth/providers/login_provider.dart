@@ -2,12 +2,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import 'package:trackora/app/routes.dart';
 import 'package:trackora/core/constants/api_constants.dart';
 import 'package:trackora/core/constants/api_service.dart';
 import 'package:trackora/core/storage/local_storage.dart';
 
 import '../../../core/constants/app_colors.dart';
+import '../../../core/face/face_profile_store.dart';
+import '../../../screens/home/providers/home_provider.dart';
+
+enum LoginRole { admin, hr, user }
 
 class LoginProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -18,6 +23,24 @@ class LoginProvider extends ChangeNotifier {
   bool obscure = true;
   bool isLoading = false;
   String? errorMessage;
+  LoginRole selectedRole = LoginRole.admin;
+
+  String get loginButtonLabel {
+    switch (selectedRole) {
+      case LoginRole.admin:
+        return 'Login as Admin';
+      case LoginRole.hr:
+        return 'Login as HR';
+      case LoginRole.user:
+        return 'Login as User';
+    }
+  }
+
+  void selectRole(LoginRole role) {
+    if (selectedRole == role) return;
+    selectedRole = role;
+    notifyListeners();
+  }
 
   void toggleObscure() {
     obscure = !obscure;
@@ -69,6 +92,8 @@ class LoginProvider extends ChangeNotifier {
         backgroundColor: AppColors.appColor,
         textColor: Colors.white,
       );
+      await context.read<HomeProvider>().refreshSession();
+      if (!context.mounted) return;
       Navigator.pushReplacementNamed(context, AppRoutes.homeScreen);
       return;
     }
@@ -118,6 +143,9 @@ class LoginProvider extends ChangeNotifier {
           return false;
         }
 
+        final newUserId = user['id']?.toString() ?? '';
+        await _resetFaceIfUserChanged(newUserId);
+
         await GetStorageData.saveString(GetStorageData.token, token);
         await GetStorageData.saveString(
           GetStorageData.loginData,
@@ -152,6 +180,23 @@ class LoginProvider extends ChangeNotifier {
       notifyListeners();
       return false;
     }
+  }
+
+  Future<void> _resetFaceIfUserChanged(String newUserId) async {
+    final previousUserId =
+        GetStorageData.readString(GetStorageData.userId)?.toString();
+    final registeredFor =
+        GetStorageData.readString(GetStorageData.faceRegisteredUserId)?.toString();
+    final sameUser = previousUserId != null &&
+        previousUserId.isNotEmpty &&
+        previousUserId == newUserId &&
+        registeredFor == newUserId;
+    if (sameUser) return;
+
+    print('FACE RESET for new user: $newUserId (was $previousUserId)');
+    await GetStorageData.removeData(GetStorageData.faceRegistered);
+    await GetStorageData.removeData(GetStorageData.faceRegisteredUserId);
+    await FaceProfileStore.clear();
   }
 
   String? _messageFromBody(dynamic body) {

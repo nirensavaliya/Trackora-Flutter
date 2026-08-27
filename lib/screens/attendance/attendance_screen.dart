@@ -83,8 +83,14 @@ class AttendanceScreen extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           _Timeline(
-            punched: punched,
-            punchInTime: punched ? _formatClock(home.punchedInAt!) : '- -',
+            punched: punched || home.isPunchedOut,
+            punchInTime: home.punchedInAt != null
+                ? _formatClock(home.punchedInAt!)
+                : '- -',
+            punchOutTime: home.punchedOutAt != null
+                ? _formatClock(home.punchedOutAt!)
+                : '- -',
+            punchedOut: home.isPunchedOut,
           ),
         ],
       ),
@@ -119,12 +125,18 @@ class _StatusCard extends StatelessWidget {
             children: [
               Icon(
                 Icons.circle,
-                color: punched ? const Color(0xFF7DFFB3) : Colors.white54,
+              color: punched || home.isPunchedOut
+                  ? const Color(0xFF7DFFB3)
+                  : Colors.white54,
                 size: 10,
               ),
               const SizedBox(width: 8),
               Text(
-                punched ? 'PUNCHED IN' : 'NOT PUNCHED IN',
+                punched
+                    ? 'PUNCHED IN'
+                    : home.isPunchedOut
+                        ? 'PUNCHED OUT'
+                        : 'NOT PUNCHED IN',
                 style: const TextStyle(
                   fontFamily: 'Inter_Bold',
                   color: Colors.white,
@@ -136,7 +148,11 @@ class _StatusCard extends StatelessWidget {
           ),
           const SizedBox(height: 18),
           Text(
-            punched ? formatClock(home.punchedInAt!) : '--:--',
+            punched
+                ? formatClock(home.punchedInAt!)
+                : home.isPunchedOut && home.punchedOutAt != null
+                    ? formatClock(home.punchedOutAt!)
+                    : '--:--',
             style: const TextStyle(
               fontFamily: 'Inter_Bold',
               color: Colors.white,
@@ -146,43 +162,69 @@ class _StatusCard extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            punched ? 'Working ${home.workingDuration}' : 'Start your day',
+            punched
+                ? 'Working ${home.workingDuration}'
+                : home.isPunchedOut
+                    ? 'Worked ${home.workingDuration}'
+                    : 'Start your day',
             style: const TextStyle(
               fontFamily: 'Inter_Regular',
               color: Colors.white,
               fontSize: 14,
             ),
           ),
-          const SizedBox(height: 22),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton.icon(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.faceVerify);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: AppColors.appColor,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
+          if (home.isPunchedOut) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.16),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.45)),
               ),
-              icon: Icon(
-                punched ? Icons.timer_outlined : Icons.fingerprint,
-                size: 20,
-              ),
-              label: Text(
-                punched ? 'PUNCH OUT' : 'PUNCH IN',
-                style: const TextStyle(
+              child: const Text(
+                'DAY CLOSED',
+                style: TextStyle(
                   fontFamily: 'Inter_SemiBold',
-                  fontSize: 14,
-                  letterSpacing: 0.8,
+                  color: Colors.white,
+                  fontSize: 12,
+                  letterSpacing: 1,
                 ),
               ),
             ),
-          ),
+          ],
+          if (!home.isPunchedOut) ...[
+            const SizedBox(height: 22),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRoutes.faceVerify);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppColors.appColor,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+                icon: Icon(
+                  punched ? Icons.timer_outlined : Icons.fingerprint,
+                  size: 20,
+                ),
+                label: Text(
+                  punched ? 'PUNCH OUT' : 'PUNCH IN',
+                  style: const TextStyle(
+                    fontFamily: 'Inter_SemiBold',
+                    fontSize: 14,
+                    letterSpacing: 0.8,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -193,10 +235,14 @@ class _Timeline extends StatelessWidget {
   const _Timeline({
     required this.punched,
     required this.punchInTime,
+    required this.punchOutTime,
+    required this.punchedOut,
   });
 
   final bool punched;
   final String punchInTime;
+  final String punchOutTime;
+  final bool punchedOut;
 
   @override
   Widget build(BuildContext context) {
@@ -209,9 +255,9 @@ class _Timeline extends StatelessWidget {
           isLast: false,
         ),
         _TimelineRow(
-          time: '- -',
+          time: punchOutTime,
           label: 'Punched Out',
-          done: false,
+          done: punchedOut,
           isLast: true,
         ),
       ],

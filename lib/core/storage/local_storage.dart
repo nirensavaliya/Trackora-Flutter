@@ -14,6 +14,8 @@ class GetStorageData {
   static String currencyCode = "currencyCode";
   static String currencySymbol = "currencySymbol";
   static String currencyUsdRate = "currencyUsdRate";
+  static String faceRegistered = "faceRegistered";
+  static String faceRegisteredUserId = "faceRegisteredUserId";
 
   /// <<< To save object data --------- >>>
   static saveString(String key, value) async {

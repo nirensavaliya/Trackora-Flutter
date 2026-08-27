@@ -158,7 +158,7 @@
     },
     {
       "name": "google_mlkit_face_detection",
-      "version": "0.14.0",
+      "version": "0.15.1",
       "dependencies": [
         "flutter",
         "google_mlkit_commons"
@@ -565,7 +565,7 @@
     },
     {
       "name": "google_mlkit_commons",
-      "version": "0.12.0",
+      "version": "0.13.0",
       "dependencies": [
         "flutter"
       ]

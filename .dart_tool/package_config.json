@@ -219,15 +219,15 @@
     },
     {
       "name": "google_mlkit_commons",
-      "rootUri": "file:///Users/imac/.pub-cache/hosted/pub.dev/google_mlkit_commons-0.12.0",
+      "rootUri": "file:///Users/imac/.pub-cache/hosted/pub.dev/google_mlkit_commons-0.13.0",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.12"
     },
     {
       "name": "google_mlkit_face_detection",
-      "rootUri": "file:///Users/imac/.pub-cache/hosted/pub.dev/google_mlkit_face_detection-0.14.0",
+      "rootUri": "file:///Users/imac/.pub-cache/hosted/pub.dev/google_mlkit_face_detection-0.15.1",
       "packageUri": "lib/",
-      "languageVersion": "3.8"
+      "languageVersion": "3.12"
     },
     {
       "name": "hooks",

@@ -1,0 +1,357 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.trackora"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="36" />
+10    <!--
+11         The INTERNET permission is required for development. Specifically,
+12         the Flutter tool needs it to communicate with the running application
+13         to allow setting breakpoints, to provide hot reload, etc.
+14    -->
+15    <uses-permission android:name="android.permission.INTERNET" />
+15-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:2:5-66
+15-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:2:22-64
+16    <uses-permission android:name="android.permission.CAMERA" />
+16-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:3:5-64
+16-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:3:22-62
+17
+18    <uses-feature
+18-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:4:5-84
+19        android:name="android.hardware.camera"
+19-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:4:19-57
+20        android:required="false" />
+20-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:4:58-82
+21    <uses-feature
+21-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:5:5-90
+22        android:name="android.hardware.camera.front"
+22-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:5:19-63
+23        android:required="false" />
+23-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:5:64-88
+24    <!--
+25 Required to query activities that can process text, see:
+26         https://developer.android.com/training/package-visibility and
+27         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+28
+29         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin.
+30    -->
+31    <queries>
+31-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:46:5-51:15
+32        <intent>
+32-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:47:9-50:18
+33            <action android:name="android.intent.action.PROCESS_TEXT" />
+33-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:48:13-72
+33-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:48:21-70
+34
+35            <data android:mimeType="text/plain" />
+35-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:49:13-50
+35-->/Users/imac/Documents/GitHub/Trackora-Flutter/android/app/src/main/AndroidManifest.xml:49:19-48
+36        </intent>
+37        <!-- Needs to be explicitly declared on Android R+ -->
+38        <package android:name="com.google.android.apps.maps" />
+38-->[com.google.android.gms:play-services-maps:20.0.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/52de43eb4f8cd4b46e486ecffe6dc4e5/transformed/play-services-maps-20.0.0/AndroidManifest.xml:29:7-61
+38-->[com.google.android.gms:play-services-maps:20.0.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/52de43eb4f8cd4b46e486ecffe6dc4e5/transformed/play-services-maps-20.0.0/AndroidManifest.xml:29:16-59
+39    </queries>
+40
+41    <uses-feature android:name="android.hardware.camera.any" />
+41-->[:camera_android_camerax] /Users/imac/.pub-cache/hosted/pub.dev/camera_android_camerax-0.7.4+6/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:7:5-64
+41-->[:camera_android_camerax] /Users/imac/.pub-cache/hosted/pub.dev/camera_android_camerax-0.7.4+6/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:7:19-61
+42
+43    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+43-->[:camera_android_camerax] /Users/imac/.pub-cache/hosted/pub.dev/camera_android_camerax-0.7.4+6/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:10:5-71
+43-->[:camera_android_camerax] /Users/imac/.pub-cache/hosted/pub.dev/camera_android_camerax-0.7.4+6/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:10:22-68
+44    <uses-permission
+44-->[:camera_android_camerax] /Users/imac/.pub-cache/hosted/pub.dev/camera_android_camerax-0.7.4+6/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:11:5-13:38
+45        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+45-->[:camera_android_camerax] /Users/imac/.pub-cache/hosted/pub.dev/camera_android_camerax-0.7.4+6/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:12:9-65
+46        android:maxSdkVersion="28" />
+46-->[:camera_android_camerax] /Users/imac/.pub-cache/hosted/pub.dev/camera_android_camerax-0.7.4+6/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:13:9-35
+47    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- Include required permissions for Google Maps API to run. -->
+48    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+48-->[com.google.android.gms:play-services-maps:20.0.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/52de43eb4f8cd4b46e486ecffe6dc4e5/transformed/play-services-maps-20.0.0/AndroidManifest.xml:20:5-78
+48-->[com.google.android.gms:play-services-maps:20.0.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/52de43eb4f8cd4b46e486ecffe6dc4e5/transformed/play-services-maps-20.0.0/AndroidManifest.xml:20:22-76
+49
+50    <uses-feature
+50-->[com.google.android.gms:play-services-maps:20.0.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/52de43eb4f8cd4b46e486ecffe6dc4e5/transformed/play-services-maps-20.0.0/AndroidManifest.xml:22:5-24:33
+51        android:glEsVersion="0x00020000"
+51-->[com.google.android.gms:play-services-maps:20.0.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/52de43eb4f8cd4b46e486ecffe6dc4e5/transformed/play-services-maps-20.0.0/AndroidManifest.xml:23:8-40
+52        android:required="true" />
+52-->[com.google.android.gms:play-services-maps:20.0.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/52de43eb4f8cd4b46e486ecffe6dc4e5/transformed/play-services-maps-20.0.0/AndroidManifest.xml:24:8-31
+53
+54    <permission
+54-->[androidx.core:core:1.17.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/004b740742506b516b7ca9337b41d424/transformed/core-1.17.0/AndroidManifest.xml:22:5-24:47
+55        android:name="com.example.trackora.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+55-->[androidx.core:core:1.17.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/004b740742506b516b7ca9337b41d424/transformed/core-1.17.0/AndroidManifest.xml:23:9-81
+56        android:protectionLevel="signature" />
+56-->[androidx.core:core:1.17.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/004b740742506b516b7ca9337b41d424/transformed/core-1.17.0/AndroidManifest.xml:24:9-44
+57
+58    <uses-permission android:name="com.example.trackora.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+58-->[androidx.core:core:1.17.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/004b740742506b516b7ca9337b41d424/transformed/core-1.17.0/AndroidManifest.xml:26:5-97
+58-->[androidx.core:core:1.17.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/004b740742506b516b7ca9337b41d424/transformed/core-1.17.0/AndroidManifest.xml:26:22-94
+59    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+60
+61    <application
+62        android:name="android.app.Application"
+63        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+63-->[androidx.core:core:1.17.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/004b740742506b516b7ca9337b41d424/transformed/core-1.17.0/AndroidManifest.xml:28:18-86
+64        android:debuggable="true"
+65        android:extractNativeLibs="false"
+66        android:icon="@mipmap/ic_launcher"
+67        android:label="trackora" >
+68        <activity
+69            android:name="com.example.trackora.MainActivity"
+70            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+71            android:exported="true"
+72            android:hardwareAccelerated="true"
+73            android:launchMode="singleTop"
+74            android:taskAffinity=""
+75            android:theme="@style/LaunchTheme"
+76            android:windowSoftInputMode="adjustResize" >
+77
+78            <!--
+79                 Specifies an Android theme to apply to this Activity as soon as
+80                 the Android process has started. This theme is visible to the user
+81                 while the Flutter UI initializes. After that, this theme continues
+82                 to determine the Window background behind the Flutter UI.
+83            -->
+84            <meta-data
+85                android:name="io.flutter.embedding.android.NormalTheme"
+86                android:resource="@style/NormalTheme" />
+87
+88            <intent-filter>
+89                <action android:name="android.intent.action.MAIN" />
+90
+91                <category android:name="android.intent.category.LAUNCHER" />
+92            </intent-filter>
+93        </activity>
+94        <!--
+95             Don't delete the meta-data below.
+96             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+97        -->
+98        <meta-data
+99            android:name="com.google.android.geo.API_KEY"
+100            android:value="AIzaSyBI-9KfkX4AkplPLb5aYeGUpWEZIofCeSE" />
+101        <meta-data
+102            android:name="flutterEmbedding"
+103            android:value="2" />
+104
+105        <uses-library
+105-->[:google_maps_flutter_android] /Users/imac/.pub-cache/hosted/pub.dev/google_maps_flutter_android-2.19.12/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:8:9-10:40
+106            android:name="org.apache.http.legacy"
+106-->[:google_maps_flutter_android] /Users/imac/.pub-cache/hosted/pub.dev/google_maps_flutter_android-2.19.12/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:9:13-50
+107            android:required="false" />
+107-->[:google_maps_flutter_android] /Users/imac/.pub-cache/hosted/pub.dev/google_maps_flutter_android-2.19.12/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:10:13-37
+108
+109        <service
+109-->[androidx.camera:camera-camera2:1.6.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/11ee9e60ee182ea3222281d418c414ce/transformed/camera-camera2-1.6.1/AndroidManifest.xml:24:9-33:19
+110            android:name="androidx.camera.core.impl.MetadataHolderService"
+110-->[androidx.camera:camera-camera2:1.6.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/11ee9e60ee182ea3222281d418c414ce/transformed/camera-camera2-1.6.1/AndroidManifest.xml:25:13-75
+111            android:enabled="false"
+111-->[androidx.camera:camera-camera2:1.6.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/11ee9e60ee182ea3222281d418c414ce/transformed/camera-camera2-1.6.1/AndroidManifest.xml:26:13-36
+112            android:exported="false" >
+112-->[androidx.camera:camera-camera2:1.6.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/11ee9e60ee182ea3222281d418c414ce/transformed/camera-camera2-1.6.1/AndroidManifest.xml:27:13-37
+113            <meta-data
+113-->[androidx.camera:camera-camera2:1.6.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/11ee9e60ee182ea3222281d418c414ce/transformed/camera-camera2-1.6.1/AndroidManifest.xml:30:13-32:89
+114                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
+114-->[androidx.camera:camera-camera2:1.6.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/11ee9e60ee182ea3222281d418c414ce/transformed/camera-camera2-1.6.1/AndroidManifest.xml:31:17-103
+115                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
+115-->[androidx.camera:camera-camera2:1.6.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/11ee9e60ee182ea3222281d418c414ce/transformed/camera-camera2-1.6.1/AndroidManifest.xml:32:17-86
+116        </service>
+117
+118        <meta-data
+118-->[com.google.maps.android:android-maps-utils:4.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/6b1b8ecda4de34e7c5aea928a3a328c3/transformed/android-maps-utils-4.1.0/AndroidManifest.xml:24:9-26:69
+119            android:name="com.google.android.gms.version"
+119-->[com.google.maps.android:android-maps-utils:4.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/6b1b8ecda4de34e7c5aea928a3a328c3/transformed/android-maps-utils-4.1.0/AndroidManifest.xml:25:13-58
+120            android:value="@integer/google_play_services_version" />
+120-->[com.google.maps.android:android-maps-utils:4.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/6b1b8ecda4de34e7c5aea928a3a328c3/transformed/android-maps-utils-4.1.0/AndroidManifest.xml:26:13-66
+121
+122        <provider
+122-->[com.google.maps.android:android-maps-utils:4.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/6b1b8ecda4de34e7c5aea928a3a328c3/transformed/android-maps-utils-4.1.0/AndroidManifest.xml:28:9-36:20
+123            android:name="androidx.startup.InitializationProvider"
+123-->[com.google.maps.android:android-maps-utils:4.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/6b1b8ecda4de34e7c5aea928a3a328c3/transformed/android-maps-utils-4.1.0/AndroidManifest.xml:29:13-67
+124            android:authorities="com.example.trackora.androidx-startup"
+124-->[com.google.maps.android:android-maps-utils:4.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/6b1b8ecda4de34e7c5aea928a3a328c3/transformed/android-maps-utils-4.1.0/AndroidManifest.xml:30:13-68
+125            android:exported="false" >
+125-->[com.google.maps.android:android-maps-utils:4.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/6b1b8ecda4de34e7c5aea928a3a328c3/transformed/android-maps-utils-4.1.0/AndroidManifest.xml:31:13-37
+126            <meta-data
+126-->[com.google.maps.android:android-maps-utils:4.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/6b1b8ecda4de34e7c5aea928a3a328c3/transformed/android-maps-utils-4.1.0/AndroidManifest.xml:33:13-35:52
+127                android:name="com.google.maps.android.utils.attribution.AttributionIdInitializer"
+127-->[com.google.maps.android:android-maps-utils:4.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/6b1b8ecda4de34e7c5aea928a3a328c3/transformed/android-maps-utils-4.1.0/AndroidManifest.xml:34:17-98
+128                android:value="androidx.startup" />
+128-->[com.google.maps.android:android-maps-utils:4.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/6b1b8ecda4de34e7c5aea928a3a328c3/transformed/android-maps-utils-4.1.0/AndroidManifest.xml:35:17-49
+129            <meta-data
+129-->[androidx.emoji2:emoji2:1.3.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/14b0a21748e60b9870ad89c291b5c3cd/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+130                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+130-->[androidx.emoji2:emoji2:1.3.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/14b0a21748e60b9870ad89c291b5c3cd/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+131                android:value="androidx.startup" />
+131-->[androidx.emoji2:emoji2:1.3.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/14b0a21748e60b9870ad89c291b5c3cd/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+132            <meta-data
+132-->[androidx.lifecycle:lifecycle-process:2.7.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/a63116536f793b245865c367eccef46a/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:29:13-31:52
+133                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+133-->[androidx.lifecycle:lifecycle-process:2.7.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/a63116536f793b245865c367eccef46a/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:30:17-78
+134                android:value="androidx.startup" />
+134-->[androidx.lifecycle:lifecycle-process:2.7.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/a63116536f793b245865c367eccef46a/transformed/lifecycle-process-2.7.0/AndroidManifest.xml:31:17-49
+135            <meta-data
+135-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:29:13-31:52
+136                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+136-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:30:17-85
+137                android:value="androidx.startup" />
+137-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:31:17-49
+138        </provider>
+139
+140        <service
+140-->[com.google.android.gms:play-services-mlkit-face-detection:17.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/e502eba649a75f38c6e431fbc4ad516a/transformed/play-services-mlkit-face-detection-17.1.0/AndroidManifest.xml:9:9-15:19
+141            android:name="com.google.mlkit.common.internal.MlKitComponentDiscoveryService"
+141-->[com.google.android.gms:play-services-mlkit-face-detection:17.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/e502eba649a75f38c6e431fbc4ad516a/transformed/play-services-mlkit-face-detection-17.1.0/AndroidManifest.xml:10:13-91
+142            android:directBootAware="true"
+142-->[com.google.mlkit:common:18.11.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/c789538a5ed05081ce4643112ba0cc59/transformed/common-18.11.0/AndroidManifest.xml:17:13-43
+143            android:exported="false" >
+143-->[com.google.android.gms:play-services-mlkit-face-detection:17.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/e502eba649a75f38c6e431fbc4ad516a/transformed/play-services-mlkit-face-detection-17.1.0/AndroidManifest.xml:11:13-37
+144            <meta-data
+144-->[com.google.android.gms:play-services-mlkit-face-detection:17.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/e502eba649a75f38c6e431fbc4ad516a/transformed/play-services-mlkit-face-detection-17.1.0/AndroidManifest.xml:12:13-14:85
+145                android:name="com.google.firebase.components:com.google.mlkit.vision.face.internal.FaceRegistrar"
+145-->[com.google.android.gms:play-services-mlkit-face-detection:17.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/e502eba649a75f38c6e431fbc4ad516a/transformed/play-services-mlkit-face-detection-17.1.0/AndroidManifest.xml:13:17-114
+146                android:value="com.google.firebase.components.ComponentRegistrar" />
+146-->[com.google.android.gms:play-services-mlkit-face-detection:17.1.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/e502eba649a75f38c6e431fbc4ad516a/transformed/play-services-mlkit-face-detection-17.1.0/AndroidManifest.xml:14:17-82
+147            <meta-data
+147-->[com.google.mlkit:vision-common:17.3.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/0062372c7ddc7c2bc18e120fe35d8b19/transformed/vision-common-17.3.0/AndroidManifest.xml:12:13-14:85
+148                android:name="com.google.firebase.components:com.google.mlkit.vision.common.internal.VisionCommonRegistrar"
+148-->[com.google.mlkit:vision-common:17.3.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/0062372c7ddc7c2bc18e120fe35d8b19/transformed/vision-common-17.3.0/AndroidManifest.xml:13:17-124
+149                android:value="com.google.firebase.components.ComponentRegistrar" />
+149-->[com.google.mlkit:vision-common:17.3.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/0062372c7ddc7c2bc18e120fe35d8b19/transformed/vision-common-17.3.0/AndroidManifest.xml:14:17-82
+150            <meta-data
+150-->[com.google.mlkit:common:18.11.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/c789538a5ed05081ce4643112ba0cc59/transformed/common-18.11.0/AndroidManifest.xml:20:13-22:85
+151                android:name="com.google.firebase.components:com.google.mlkit.common.internal.CommonComponentRegistrar"
+151-->[com.google.mlkit:common:18.11.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/c789538a5ed05081ce4643112ba0cc59/transformed/common-18.11.0/AndroidManifest.xml:21:17-120
+152                android:value="com.google.firebase.components.ComponentRegistrar" />
+152-->[com.google.mlkit:common:18.11.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/c789538a5ed05081ce4643112ba0cc59/transformed/common-18.11.0/AndroidManifest.xml:22:17-82
+153        </service>
+154
+155        <provider
+155-->[com.google.mlkit:common:18.11.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/c789538a5ed05081ce4643112ba0cc59/transformed/common-18.11.0/AndroidManifest.xml:9:9-13:38
+156            android:name="com.google.mlkit.common.internal.MlKitInitProvider"
+156-->[com.google.mlkit:common:18.11.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/c789538a5ed05081ce4643112ba0cc59/transformed/common-18.11.0/AndroidManifest.xml:10:13-78
+157            android:authorities="com.example.trackora.mlkitinitprovider"
+157-->[com.google.mlkit:common:18.11.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/c789538a5ed05081ce4643112ba0cc59/transformed/common-18.11.0/AndroidManifest.xml:11:13-69
+158            android:exported="false"
+158-->[com.google.mlkit:common:18.11.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/c789538a5ed05081ce4643112ba0cc59/transformed/common-18.11.0/AndroidManifest.xml:12:13-37
+159            android:initOrder="99" />
+159-->[com.google.mlkit:common:18.11.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/c789538a5ed05081ce4643112ba0cc59/transformed/common-18.11.0/AndroidManifest.xml:13:13-35
+160
+161        <activity
+161-->[com.google.android.gms:play-services-base:18.5.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/269dbd9d76c02db71010449b519b3b82/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:9-173
+162            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+162-->[com.google.android.gms:play-services-base:18.5.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/269dbd9d76c02db71010449b519b3b82/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:19-85
+163            android:exported="false"
+163-->[com.google.android.gms:play-services-base:18.5.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/269dbd9d76c02db71010449b519b3b82/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:146-170
+164            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+164-->[com.google.android.gms:play-services-base:18.5.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/269dbd9d76c02db71010449b519b3b82/transformed/play-services-base-18.5.0/AndroidManifest.xml:5:86-145
+165
+166        <uses-library
+166-->[androidx.window:window:1.2.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/772ae9e08c8a01c4bf6e4385ed927f0a/transformed/window-1.2.0/AndroidManifest.xml:23:9-25:40
+167            android:name="androidx.window.extensions"
+167-->[androidx.window:window:1.2.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/772ae9e08c8a01c4bf6e4385ed927f0a/transformed/window-1.2.0/AndroidManifest.xml:24:13-54
+168            android:required="false" />
+168-->[androidx.window:window:1.2.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/772ae9e08c8a01c4bf6e4385ed927f0a/transformed/window-1.2.0/AndroidManifest.xml:25:13-37
+169        <uses-library
+169-->[androidx.window:window:1.2.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/772ae9e08c8a01c4bf6e4385ed927f0a/transformed/window-1.2.0/AndroidManifest.xml:26:9-28:40
+170            android:name="androidx.window.sidecar"
+170-->[androidx.window:window:1.2.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/772ae9e08c8a01c4bf6e4385ed927f0a/transformed/window-1.2.0/AndroidManifest.xml:27:13-51
+171            android:required="false" />
+171-->[androidx.window:window:1.2.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/772ae9e08c8a01c4bf6e4385ed927f0a/transformed/window-1.2.0/AndroidManifest.xml:28:13-37
+172
+173        <receiver
+173-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:34:9-52:20
+174            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+174-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:35:13-76
+175            android:directBootAware="false"
+175-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:36:13-44
+176            android:enabled="true"
+176-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:37:13-35
+177            android:exported="true"
+177-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:38:13-36
+178            android:permission="android.permission.DUMP" >
+178-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:39:13-57
+179            <intent-filter>
+179-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:40:13-42:29
+180                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+180-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:17-91
+180-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:41:25-88
+181            </intent-filter>
+182            <intent-filter>
+182-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:43:13-45:29
+183                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+183-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:17-85
+183-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:44:25-82
+184            </intent-filter>
+185            <intent-filter>
+185-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:46:13-48:29
+186                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+186-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:17-88
+186-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:47:25-85
+187            </intent-filter>
+188            <intent-filter>
+188-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:49:13-51:29
+189                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+189-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:17-95
+189-->[androidx.profileinstaller:profileinstaller:1.3.1] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/1215fe33ffb12aa931882370adbb0c84/transformed/profileinstaller-1.3.1/AndroidManifest.xml:50:25-92
+190            </intent-filter>
+191        </receiver>
+192
+193        <service
+193-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/14b335add1df236a65ff45015cb9eaba/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:29:9-35:19
+194            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+194-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/14b335add1df236a65ff45015cb9eaba/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:30:13-103
+195            android:exported="false" >
+195-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/14b335add1df236a65ff45015cb9eaba/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:31:13-37
+196            <meta-data
+196-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/14b335add1df236a65ff45015cb9eaba/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:32:13-34:39
+197                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+197-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/14b335add1df236a65ff45015cb9eaba/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:33:17-94
+198                android:value="cct" />
+198-->[com.google.android.datatransport:transport-backend-cct:2.3.3] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/14b335add1df236a65ff45015cb9eaba/transformed/transport-backend-cct-2.3.3/AndroidManifest.xml:34:17-36
+199        </service>
+200        <service
+200-->[com.google.android.datatransport:transport-runtime:2.2.6] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/af46aaa28b0e7eb1f162b35a68b8129e/transformed/transport-runtime-2.2.6/AndroidManifest.xml:26:9-30:19
+201            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+201-->[com.google.android.datatransport:transport-runtime:2.2.6] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/af46aaa28b0e7eb1f162b35a68b8129e/transformed/transport-runtime-2.2.6/AndroidManifest.xml:27:13-117
+202            android:exported="false"
+202-->[com.google.android.datatransport:transport-runtime:2.2.6] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/af46aaa28b0e7eb1f162b35a68b8129e/transformed/transport-runtime-2.2.6/AndroidManifest.xml:28:13-37
+203            android:permission="android.permission.BIND_JOB_SERVICE" >
+203-->[com.google.android.datatransport:transport-runtime:2.2.6] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/af46aaa28b0e7eb1f162b35a68b8129e/transformed/transport-runtime-2.2.6/AndroidManifest.xml:29:13-69
+204        </service>
+205
+206        <receiver
+206-->[com.google.android.datatransport:transport-runtime:2.2.6] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/af46aaa28b0e7eb1f162b35a68b8129e/transformed/transport-runtime-2.2.6/AndroidManifest.xml:32:9-34:40
+207            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+207-->[com.google.android.datatransport:transport-runtime:2.2.6] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/af46aaa28b0e7eb1f162b35a68b8129e/transformed/transport-runtime-2.2.6/AndroidManifest.xml:33:13-132
+208            android:exported="false" />
+208-->[com.google.android.datatransport:transport-runtime:2.2.6] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/af46aaa28b0e7eb1f162b35a68b8129e/transformed/transport-runtime-2.2.6/AndroidManifest.xml:34:13-37
+209        <!--
+210 Applications that target Android S+ require explicit declaration of
+211             any referenced vendor-provided libraries.
+212        -->
+213        <uses-native-library
+213-->[com.google.ai.edge.litert:litert-gpu-api:1.4.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/609ea8725f4ed6bbbce266d541233c2d/transformed/litert-gpu-api-1.4.0/AndroidManifest.xml:8:9-10:40
+214            android:name="libOpenCL.so"
+214-->[com.google.ai.edge.litert:litert-gpu-api:1.4.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/609ea8725f4ed6bbbce266d541233c2d/transformed/litert-gpu-api-1.4.0/AndroidManifest.xml:9:13-40
+215            android:required="false" />
+215-->[com.google.ai.edge.litert:litert-gpu-api:1.4.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/609ea8725f4ed6bbbce266d541233c2d/transformed/litert-gpu-api-1.4.0/AndroidManifest.xml:10:13-37
+216        <uses-native-library
+216-->[com.google.ai.edge.litert:litert-gpu-api:1.4.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/609ea8725f4ed6bbbce266d541233c2d/transformed/litert-gpu-api-1.4.0/AndroidManifest.xml:8:9-10:40
+217            android:name="libOpenCL-car.so"
+217-->[com.google.ai.edge.litert:litert-gpu-api:1.4.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/609ea8725f4ed6bbbce266d541233c2d/transformed/litert-gpu-api-1.4.0/AndroidManifest.xml:9:13-40
+218            android:required="false" />
+218-->[com.google.ai.edge.litert:litert-gpu-api:1.4.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/609ea8725f4ed6bbbce266d541233c2d/transformed/litert-gpu-api-1.4.0/AndroidManifest.xml:10:13-37
+219        <uses-native-library
+219-->[com.google.ai.edge.litert:litert-gpu-api:1.4.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/609ea8725f4ed6bbbce266d541233c2d/transformed/litert-gpu-api-1.4.0/AndroidManifest.xml:8:9-10:40
+220            android:name="libOpenCL-pixel.so"
+220-->[com.google.ai.edge.litert:litert-gpu-api:1.4.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/609ea8725f4ed6bbbce266d541233c2d/transformed/litert-gpu-api-1.4.0/AndroidManifest.xml:9:13-40
+221            android:required="false" />
+221-->[com.google.ai.edge.litert:litert-gpu-api:1.4.0] /private/var/folders/6c/m_yxqhdj669bm6cjr3msdz080000gn/T/cursor-sandbox-cache/53dfe1e93cedad6e76619dcee0b3263a/gradle/caches/9.1.0/transforms/609ea8725f4ed6bbbce266d541233c2d/transformed/litert-gpu-api-1.4.0/AndroidManifest.xml:10:13-37
+222    </application>
+223
+224</manifest>

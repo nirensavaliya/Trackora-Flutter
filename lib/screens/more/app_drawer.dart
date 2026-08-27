@@ -1,10 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:trackora/app/routes.dart';
 import 'package:trackora/core/constants/app_colors.dart';
 import 'package:trackora/core/storage/local_storage.dart';
+import 'package:trackora/core/face/face_profile_store.dart';
 import 'package:trackora/screens/attendance/attendance_screen.dart';
+import 'package:trackora/screens/home/providers/home_provider.dart';
+import 'package:trackora/screens/leave/leave_screen.dart';
 import 'package:trackora/screens/thoughts/daily_thoughts_screen.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -28,11 +32,17 @@ class AppDrawer extends StatelessWidget {
     await GetStorageData.removeData(GetStorageData.userId);
     await GetStorageData.removeData(GetStorageData.companyCode);
     await GetStorageData.removeData(GetStorageData.userType);
+    await GetStorageData.removeData(GetStorageData.faceRegistered);
+    await GetStorageData.removeData(GetStorageData.faceRegisteredUserId);
+    await FaceProfileStore.clear();
+    if (context.mounted) {
+      context.read<HomeProvider>().resetSession();
+    }
     if (!context.mounted) return;
     Navigator.pushNamedAndRemoveUntil(
       context,
       AppRoutes.loginScreen,
-          (route) => false,
+      (route) => false,
     );
   }
 
@@ -133,6 +143,20 @@ class AppDrawer extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder: (_) => const AttendanceScreen(),
+                  ),
+                );
+              },
+            ),
+            _DrawerTile(
+              icon: Icons.event_available_outlined,
+              title: 'Leave',
+              subtitle: 'Apply leave and view requests',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const LeaveScreen(showBack: true),
                   ),
                 );
               },

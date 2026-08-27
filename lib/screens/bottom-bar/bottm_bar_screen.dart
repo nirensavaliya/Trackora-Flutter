@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:trackora/core/constants/app_colors.dart';
 
 import '../home/home_screen.dart';
+import '../leave/leave_screen.dart';
 import '../more/app_drawer.dart';
 import '../tasks/tasks_screen.dart';
 
@@ -22,7 +23,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
 
   final pages = const [
     HomeScreen(),
-    Scaffold(body: Center(child: Text('Customers'))),
+    LeaveScreen(),
     TasksScreen(),
   ];
 
@@ -62,8 +63,9 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people_outline),
-            label: 'Customers',
+            icon: Icon(Icons.event_available_outlined),
+            activeIcon: Icon(Icons.event_available_rounded),
+            label: 'Leave',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.assignment_outlined),

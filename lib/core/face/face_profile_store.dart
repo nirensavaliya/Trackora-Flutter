@@ -39,4 +39,9 @@ class FaceProfileStore {
       FaceConstants.embeddingSchemaVersion,
     );
   }
+
+  static Future<void> clear() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(FaceConstants.profilePrefsKey);
+  }
 }

@@ -257,14 +257,14 @@
         <entry key="google_mlkit_commons">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/google_mlkit_commons-0.12.0/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/google_mlkit_commons-0.13.0/lib" />
             </list>
           </value>
         </entry>
         <entry key="google_mlkit_face_detection">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/google_mlkit_face_detection-0.14.0/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/google_mlkit_face_detection-0.15.1/lib" />
             </list>
           </value>
         </entry>
@@ -738,8 +738,8 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_maps_flutter_ios-2.18.4/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_maps_flutter_platform_interface-2.16.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_maps_flutter_web-0.6.3/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_mlkit_commons-0.12.0/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_mlkit_face_detection-0.14.0/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_mlkit_commons-0.13.0/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_mlkit_face_detection-0.15.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/hooks-2.0.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/html-0.15.6/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/http_parser-4.1.2/lib" />

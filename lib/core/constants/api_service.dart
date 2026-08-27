@@ -143,18 +143,16 @@ class ApiService {
   /// Generic PATCH
   Future<Response> patchRequest(
       String url, {
-        Map<String, dynamic>? data,
-        Map<String, String>? headers,
+        dynamic data,
+        Map<String, dynamic>? headers,
       }) async {
     try {
       final response = await _dio.patch(
         url,
         data: data,
-        options: Options(headers: headers),
+        options: Options(headers: headers, validateStatus: (status) => true),
       );
-
       print("PATCH API RESPONSE: $response");
-
       return response;
     } on DioException catch (e) {
       throw Exception(e.response?.data?["message"] ?? "PATCH API Error");

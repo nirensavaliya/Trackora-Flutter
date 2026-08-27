@@ -10,11 +10,13 @@ class PunchInSuccessScreen extends StatefulWidget {
     required this.time,
     required this.date,
     required this.location,
+    this.isPunchOut = false,
   });
 
   final String time;
   final String date;
   final String location;
+  final bool isPunchOut;
 
   @override
   State<PunchInSuccessScreen> createState() => _PunchInSuccessScreenState();
@@ -131,9 +133,11 @@ class _PunchInSuccessScreenState extends State<PunchInSuccessScreen>
               ),
               FadeTransition(
                 opacity: _titleFade,
-                child: const Text(
-                  'Punch In Successful!',
-                  style: TextStyle(
+                child: Text(
+                  widget.isPunchOut
+                      ? 'Punch Out Successful!'
+                      : 'Punch In Successful!',
+                  style: const TextStyle(
                     fontFamily: 'Inter_Bold',
                     color: AppColors.appColor,
                     fontSize: 22,
@@ -238,6 +242,10 @@ class _PunchInSuccessScreenState extends State<PunchInSuccessScreen>
                   height: 52,
                   child: ElevatedButton(
                     onPressed: () {
+                      if (widget.isPunchOut) {
+                        Navigator.of(context).popUntil((route) => route.isFirst);
+                        return;
+                      }
                       Navigator.push(
                         context,
                         PageRouteBuilder<void>(

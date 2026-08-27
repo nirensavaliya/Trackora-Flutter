@@ -13,7 +13,6 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final login = context.watch<LoginProvider>();
-
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle.dark.copyWith(
         statusBarColor: Colors.transparent,
@@ -53,7 +52,22 @@ class LoginScreen extends StatelessWidget {
                           height: 1.4,
                         ),
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 28),
+                      const Text(
+                        'LOGIN AS',
+                        style: TextStyle(
+                          fontFamily: 'Inter_SemiBold',
+                          color: AppColors.textGrey,
+                          fontSize: 12,
+                          letterSpacing: 0.6,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      _RoleSelector(
+                        selected: login.selectedRole,
+                        onSelected: login.selectRole,
+                      ),
+                      const SizedBox(height: 24),
                       _LabeledField(
                         label: 'Client Code',
                         controller: login.clientCode,
@@ -126,19 +140,21 @@ class LoginScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          child:  Row(
+                          child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text(
-                                login.isLoading ? "Login...." :'Login',
-                                style: TextStyle(
+                                login.isLoading
+                                    ? 'Login....'
+                                    : login.loginButtonLabel,
+                                style: const TextStyle(
                                   fontFamily: 'Inter_SemiBold',
                                   fontSize: 16,
-                                  color: Colors.white
+                                  color: Colors.white,
                                 ),
                               ),
-                              SizedBox(width: 8),
-                              Icon(Icons.arrow_forward, size: 18),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.arrow_forward, size: 18),
                             ],
                           ),
                         ),
@@ -237,6 +253,94 @@ class LoginScreen extends StatelessWidget {
             if (login.isLoading)
               const Positioned.fill(child: AppLoaderOverlay()),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RoleSelector extends StatelessWidget {
+  const _RoleSelector({
+    required this.selected,
+    required this.onSelected,
+  });
+
+  final LoginRole selected;
+  final ValueChanged<LoginRole> onSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE8EEEC),
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          _RoleChip(
+            label: 'Admin',
+            selected: selected == LoginRole.admin,
+            onTap: () => onSelected(LoginRole.admin),
+          ),
+          _RoleChip(
+            label: 'HR',
+            selected: selected == LoginRole.hr,
+            onTap: () => onSelected(LoginRole.hr),
+          ),
+          _RoleChip(
+            label: 'User',
+            selected: selected == LoginRole.user,
+            onTap: () => onSelected(LoginRole.user),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RoleChip extends StatelessWidget {
+  const _RoleChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: selected ? AppColors.appColor : Colors.transparent,
+            borderRadius: BorderRadius.circular(11),
+            boxShadow: selected
+                ? [
+                    BoxShadow(
+                      color: AppColors.appColor.withValues(alpha: 0.22),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : null,
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontFamily: selected ? 'Inter_SemiBold' : 'Inter_Medium',
+              color: selected ? Colors.white : AppColors.textGrey,
+              fontSize: 14,
+            ),
+          ),
         ),
       ),
     );

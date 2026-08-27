@@ -123,26 +123,32 @@ class _FaceVerifyScreenState extends State<FaceVerifyScreen> {
           .timeout(const Duration(seconds: 8));
       if (!mounted) return;
 
+      final home = context.read<HomeProvider>();
+      if (home.isPunchedOut) {
+        _verify.fail('Already punched out today');
+        return;
+      }
+      final forPunchIn = !home.isPunchedIn;
       final ok = await _verify.completeWithEmbeddings(
         embedding == null ? [] : [embedding],
+        forPunchIn: forPunchIn,
       );
       if (ok && mounted) {
-        await _goToSuccess();
+        await _goToSuccess(forPunchIn: forPunchIn);
       }
     } catch (e) {
       if (mounted) _verify.fail('Could not verify — try again');
     }
   }
 
-  Future<void> _goToSuccess() async {
+  Future<void> _goToSuccess({required bool forPunchIn}) async {
     final home = context.read<HomeProvider>();
-    if (home.isPunchedIn) {
+    if (forPunchIn) {
+      home.punchIn();
+    } else {
       home.punchOut();
-      if (mounted) Navigator.pop(context, true);
-      return;
     }
-
-    home.punchIn();
+    home.loadTodayAttendance();
     final now = DateTime.now();
     if (!mounted) return;
     await Navigator.pushReplacement(
@@ -152,7 +158,8 @@ class _FaceVerifyScreenState extends State<FaceVerifyScreen> {
         pageBuilder: (_, __, ___) => PunchInSuccessScreen(
           time: _formatTime(now),
           date: _formatDate(now),
-          location: 'Ahmedabad, Gujarat',
+          location: FaceVerifyProvider.punchLocationLabel,
+          isPunchOut: !forPunchIn,
         ),
         transitionDuration: const Duration(milliseconds: 350),
         transitionsBuilder: (_, anim, __, child) {
@@ -207,51 +214,45 @@ class _FaceVerifyScreenState extends State<FaceVerifyScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
+      appBar: AppBar(
+        backgroundColor: AppColors.scaffoldBg,
+        surfaceTintColor: Colors.transparent,
+          elevation: 0,
+        scrolledUnderElevation: 0,
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: AppColors.textDark),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        title: const Column(
+          children: [
+            Text(
+              'Verify Your Identity',
+              style: TextStyle(
+                fontFamily: 'Inter_Bold',
+                color: AppColors.appColor,
+                fontSize: 18,
+              ),
+            ),
+            SizedBox(height: 4),
+            Text(
+              'Please position your face inside the circle',
+              style: TextStyle(
+                fontFamily: 'Inter_Regular',
+                color: AppColors.appColor,
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        toolbarHeight: 72,
+      ),
       body: Stack(
         children: [
           Column(
             children: [
-              SafeArea(
-                bottom: false,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back, color: AppColors.textDark),
-                        onPressed: () => Navigator.pop(context, false),
-                      ),
-                      const Expanded(
-                        child: Column(
-                          children: [
-                            Text(
-                              'Verify Your Identity',
-                              style: TextStyle(
-                                fontFamily: 'Inter_Bold',
-                                color: AppColors.appColor,
-                                fontSize: 18,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              'Please position your face inside the circle',
-                              style: TextStyle(
-                                fontFamily: 'Inter_Regular',
-                                color: AppColors.appColor,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 48),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 15),
                 child: Column(
                   children: [
                     _DirectionChip(

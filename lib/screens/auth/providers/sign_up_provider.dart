@@ -2,11 +2,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:trackora/app/routes.dart';
 import 'package:trackora/core/constants/api_constants.dart';
 import 'package:trackora/core/constants/api_service.dart';
 import 'package:trackora/core/constants/app_colors.dart';
+import 'package:trackora/core/face/face_profile_store.dart';
 import 'package:trackora/core/storage/local_storage.dart';
+import 'package:trackora/screens/home/providers/home_provider.dart';
 
 class SignUpProvider extends ChangeNotifier {
   final formKey = GlobalKey<FormState>();
@@ -64,6 +67,8 @@ class SignUpProvider extends ChangeNotifier {
 
     if (ok) {
       _toast(context, errorMessage ?? 'Account created successfully', success: true);
+      await context.read<HomeProvider>().refreshSession();
+      if (!context.mounted) return;
       Navigator.pushNamedAndRemoveUntil(
         context,
         AppRoutes.homeScreen,
@@ -113,6 +118,9 @@ class SignUpProvider extends ChangeNotifier {
               : <String, dynamic>{};
 
           if (token.isNotEmpty) {
+            await GetStorageData.removeData(GetStorageData.faceRegistered);
+            await GetStorageData.removeData(GetStorageData.faceRegisteredUserId);
+            await FaceProfileStore.clear();
             await GetStorageData.saveString(GetStorageData.token, token);
             await GetStorageData.saveString(
               GetStorageData.loginData,
