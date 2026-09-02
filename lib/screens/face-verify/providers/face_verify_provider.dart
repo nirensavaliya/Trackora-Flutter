@@ -384,7 +384,14 @@ class FaceVerifyProvider extends ChangeNotifier {
   }
 
   void markCameraNotReady() {
-    subtitle = 'Camera frame not ready…';
+    if (phase != FaceVerifyPhase.scanning) return;
+    subtitle = 'Camera frame not ready — hold still';
+    notifyListeners();
+  }
+
+  void reportScanIssue(String message) {
+    if (phase != FaceVerifyPhase.scanning) return;
+    subtitle = message;
     notifyListeners();
   }
 

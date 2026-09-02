@@ -47,22 +47,54 @@ InputImage? inputImageFromCameraImage({
 }
 
 Uint8List? _androidNv21Bytes(CameraImage image) {
-  final format = InputImageFormatValue.fromRawValue(image.format.raw);
+  final width = image.width;
+  final height = image.height;
+  final ySize = width * height;
+  final expectedSize = ySize + ySize ~/ 2;
 
-  if (format == InputImageFormat.nv21 && image.planes.isNotEmpty) {
-    return Uint8List.fromList(image.planes.first.bytes);
+  if (image.planes.isEmpty) return null;
+
+  if (image.planes.length == 1) {
+    final plane = image.planes.first;
+    if (plane.bytes.length >= expectedSize) {
+      return Uint8List.fromList(plane.bytes.sublist(0, expectedSize));
+    }
+    return null;
+  }
+
+  final yPlane = image.planes[0];
+
+  if (image.planes.length == 2) {
+    final uvPlane = image.planes[1];
+    final nv21 = Uint8List(expectedSize);
+
+    var yOut = 0;
+    for (var row = 0; row < height; row++) {
+      final start = row * yPlane.bytesPerRow;
+      nv21.setRange(yOut, yOut + width, yPlane.bytes, start);
+      yOut += width;
+    }
+
+    final uvHeight = height ~/ 2;
+    final uvPixelStride = uvPlane.bytesPerPixel ?? 2;
+    var uvOut = ySize;
+    for (var row = 0; row < uvHeight; row++) {
+      final rowStart = row * uvPlane.bytesPerRow;
+      for (var col = 0; col < width; col += uvPixelStride) {
+        if (uvOut + 1 >= nv21.length) break;
+        nv21[uvOut++] = uvPlane.bytes[rowStart + col];
+        nv21[uvOut++] = uvPlane.bytes[rowStart + col + 1];
+      }
+    }
+
+    return nv21;
   }
 
   if (image.planes.length < 3) return null;
 
-  final width = image.width;
-  final height = image.height;
-  final yPlane = image.planes[0];
   final uPlane = image.planes[1];
   final vPlane = image.planes[2];
-
-  final ySize = width * height;
-  final nv21 = Uint8List(ySize + ySize ~/ 2);
+  final nv21 = Uint8List(expectedSize);
 
   var out = 0;
   for (var row = 0; row < height; row++) {
@@ -83,6 +115,7 @@ Uint8List? _androidNv21Bytes(CameraImage image) {
     for (var col = 0; col < uvWidth; col++) {
       final uIndex = row * uRowStride + col * uPixelStride;
       final vIndex = row * vRowStride + col * vPixelStride;
+      if (uvIndex + 1 >= nv21.length) break;
       nv21[uvIndex++] = vPlane.bytes[vIndex];
       nv21[uvIndex++] = uPlane.bytes[uIndex];
     }

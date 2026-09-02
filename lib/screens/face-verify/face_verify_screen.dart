@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trackora/core/constants/app_colors.dart';
@@ -56,10 +57,17 @@ class _FaceVerifyScreenState extends State<FaceVerifyScreen> {
       front,
       ResolutionPreset.medium,
       enableAudio: false,
-      imageFormatGroup:
-          Platform.isAndroid ? ImageFormatGroup.nv21 : ImageFormatGroup.bgra8888,
+      imageFormatGroup: Platform.isAndroid
+          ? ImageFormatGroup.yuv420
+          : ImageFormatGroup.bgra8888,
     );
-    await controller.initialize();
+    try {
+      await controller.initialize();
+    } catch (e) {
+      if (mounted) _verify.fail('Could not start camera — try again');
+      await controller.dispose();
+      return;
+    }
     if (!mounted) {
       await controller.dispose();
       return;
@@ -94,6 +102,9 @@ class _FaceVerifyScreenState extends State<FaceVerifyScreen> {
           if (mounted) _captureAndVerify();
         });
       }
+    } catch (e, stack) {
+      debugPrint('FACE SCAN FRAME ERROR: $e\n$stack');
+      verify.reportScanIssue('Scan interrupted — hold still and try again');
     } finally {
       _busy = false;
     }
