@@ -43,22 +43,24 @@ class LeaveTypesProvider extends ChangeNotifier {
         headers: headers,
       );
       final body = response.data;
-      print('LEAVE TYPES STATUS: ${response.statusCode}');
-      print('LEAVE TYPES BODY: $body');
+      debugPrint('LEAVE TYPES STATUS: ${response.statusCode}');
+      debugPrint('LEAVE TYPES BODY: $body');
 
-      if (body is Map && body['success'] == true && body['data'] is List) {
-        types = (body['data'] as List)
-            .whereType<Map>()
-            .map((e) => LeaveTypeOption.fromJson(Map<String, dynamic>.from(e)))
-            .toList();
-        error = null;
+      if (body is Map) {
+        final parsed = LeaveTypeResponse.fromJson(
+          Map<String, dynamic>.from(body),
+        );
+        if (parsed.success == true) {
+          types = parsed.data ?? [];
+          error = null;
+        } else {
+          error = body['message']?.toString() ?? 'Could not load leave types';
+        }
       } else {
-        error = body is Map
-            ? (body['message']?.toString() ?? 'Could not load leave types')
-            : 'Could not load leave types';
+        error = 'Could not load leave types';
       }
     } catch (e) {
-      print('LEAVE TYPES ERROR: $e');
+      debugPrint('LEAVE TYPES ERROR: $e');
       error = e.toString().replaceFirst('Exception: ', '');
     } finally {
       loading = false;

@@ -2,7 +2,6 @@ import 'dart:math' as math;
 
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
-/// Same tracker as face_lock_demo enroll: center lock, then fill the ring.
 class CirclePoseTracker {
   CirclePoseTracker({this.segmentCount = 36});
 

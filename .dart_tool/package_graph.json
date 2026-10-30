@@ -8,11 +8,13 @@
       "version": "1.0.0+1",
       "dependencies": [
         "camera",
+        "change_app_package_name",
         "cupertino_icons",
         "dio",
         "flutter",
         "fluttertoast",
         "get_storage",
+        "google_fonts",
         "google_maps_flutter",
         "google_mlkit_face_detection",
         "image",
@@ -51,6 +53,21 @@
         "stream_channel",
         "test_api",
         "vector_math"
+      ]
+    },
+    {
+      "name": "change_app_package_name",
+      "version": "1.5.0",
+      "dependencies": []
+    },
+    {
+      "name": "google_fonts",
+      "version": "6.3.3",
+      "dependencies": [
+        "crypto",
+        "flutter",
+        "http",
+        "path_provider"
       ]
     },
     {
@@ -216,7 +233,7 @@
     },
     {
       "name": "meta",
-      "version": "1.18.0",
+      "version": "1.19.0",
       "dependencies": []
     },
     {
@@ -237,7 +254,7 @@
     },
     {
       "name": "vector_math",
-      "version": "2.2.0",
+      "version": "2.4.2",
       "dependencies": []
     },
     {
@@ -262,7 +279,7 @@
     },
     {
       "name": "matcher",
-      "version": "0.12.19",
+      "version": "0.12.20",
       "dependencies": [
         "async",
         "meta",
@@ -273,7 +290,7 @@
     },
     {
       "name": "test_api",
-      "version": "0.7.11",
+      "version": "0.7.12",
       "dependencies": [
         "async",
         "boolean_selector",
@@ -284,6 +301,23 @@
         "stream_channel",
         "string_scanner",
         "term_glyph"
+      ]
+    },
+    {
+      "name": "http",
+      "version": "1.6.0",
+      "dependencies": [
+        "async",
+        "http_parser",
+        "meta",
+        "web"
+      ]
+    },
+    {
+      "name": "crypto",
+      "version": "3.0.7",
+      "dependencies": [
+        "typed_data"
       ]
     },
     {
@@ -880,13 +914,6 @@
         "collection",
         "meta",
         "pub_semver"
-      ]
-    },
-    {
-      "name": "crypto",
-      "version": "3.0.7",
-      "dependencies": [
-        "typed_data"
       ]
     }
   ],

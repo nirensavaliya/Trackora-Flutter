@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:trackora/core/constants/api_constants.dart';
 import 'package:trackora/core/constants/api_service.dart';
 import 'package:trackora/core/storage/local_storage.dart';
+import 'package:trackora/data/models/employee_model.dart';
+import 'package:trackora/data/models/leave_detail_model.dart' hide Employee;
 import 'package:trackora/data/models/leave_model.dart';
 import 'package:trackora/data/models/leave_type_option.dart';
 
@@ -10,12 +12,35 @@ class LeaveProvider extends ChangeNotifier {
   DateTime? startDate;
   DateTime? endDate;
   final reasonController = TextEditingController();
+  LeaveDetailModel? leaveDetailData;
 
   List<LeaveModel> leaves = [];
+  List<Employee> employees = [];
+  String? selectedEmployeeId;
+
   bool loading = false;
   bool applying = false;
-  String? cancellingId;
+  bool assigning = false;
+  bool loadingEmployees = false;
+  String? actionBusyId;
   String? error;
+  bool isLeaveDetailLoading = false;
+  String? errorMessage;
+
+  String get token => GetStorageData.readString(GetStorageData.token) ?? '';
+
+  String get userRole =>
+      (GetStorageData.readString(GetStorageData.userType) ?? '')
+          .trim()
+          .toUpperCase();
+
+  bool get isUser => userRole == 'USER';
+
+  bool get isHr => userRole == 'HR';
+
+  bool get isAdmin => userRole == 'ADMIN';
+
+  bool get isManager => isHr || isAdmin;
 
   Map<String, String>? _authHeaders() {
     final token = GetStorageData.readString(GetStorageData.token)?.toString();
@@ -27,8 +52,18 @@ class LeaveProvider extends ChangeNotifier {
     };
   }
 
+  String? _messageFromBody(dynamic body, String fallback) {
+    if (body is Map) {
+      return body['message']?.toString() ??
+          body['error']?.toString() ??
+          fallback;
+    }
+    return fallback;
+  }
+
   void resetForm() {
     selectedType = null;
+    selectedEmployeeId = null;
     startDate = null;
     endDate = null;
     reasonController.clear();
@@ -37,6 +72,11 @@ class LeaveProvider extends ChangeNotifier {
 
   void setType(LeaveTypeOption? type) {
     selectedType = type;
+    notifyListeners();
+  }
+
+  void setEmployeeId(String? id) {
+    selectedEmployeeId = id;
     notifyListeners();
   }
 
@@ -53,7 +93,11 @@ class LeaveProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  String? validate() {
+  String? validate({bool requireEmployee = false}) {
+    if (requireEmployee &&
+        (selectedEmployeeId == null || selectedEmployeeId!.isEmpty)) {
+      return 'Select employee';
+    }
     if (selectedType == null) return 'Select leave type';
     if (startDate == null) return 'Select start date';
     if (endDate == null) return 'Select end date';
@@ -83,8 +127,8 @@ class LeaveProvider extends ChangeNotifier {
         headers: headers,
       );
       final body = response.data;
-      print('LEAVE REQUESTS STATUS: ${response.statusCode}');
-      print('LEAVE REQUESTS BODY: $body');
+      debugPrint('LEAVE REQUESTS STATUS: ${response.statusCode}');
+      debugPrint('LEAVE REQUESTS BODY: $body');
 
       if (body is Map && body['success'] == true) {
         final data = body['data'];
@@ -99,15 +143,48 @@ class LeaveProvider extends ChangeNotifier {
           leaves = [];
         }
       } else {
-        error = body is Map
-            ? (body['message']?.toString() ?? 'Could not load leaves')
-            : 'Could not load leaves';
+        error = _messageFromBody(body, 'Could not load leaves');
       }
     } catch (e) {
-      print('LEAVE REQUESTS ERROR: $e');
+      debugPrint('LEAVE REQUESTS ERROR: $e');
       error = e.toString().replaceFirst('Exception: ', '');
     } finally {
       loading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadEmployees({bool force = false}) async {
+    if (!isManager) return;
+    if (loadingEmployees) return;
+    if (!force && employees.isNotEmpty) return;
+
+    final headers = _authHeaders();
+    if (headers == null) return;
+
+    loadingEmployees = true;
+    notifyListeners();
+
+    try {
+      final response = await ApiService().getRequest(
+        ApiConstants.getEmployees,
+        headers: headers,
+      );
+      final body = response.data;
+      debugPrint('EMPLOYEES STATUS: ${response.statusCode}');
+      debugPrint('EMPLOYEES BODY: $body');
+
+      if (body is Map && body['success'] == true) {
+        final parsed = EmployeeResponse.fromJson(Map<String, dynamic>.from(body));
+        employees = parsed.data ?? [];
+      } else if (response.statusCode == 200 && body is Map) {
+        final parsed = EmployeeResponse.fromJson(Map<String, dynamic>.from(body));
+        employees = parsed.data ?? [];
+      }
+    } catch (e) {
+      debugPrint('EMPLOYEES ERROR: $e');
+    } finally {
+      loadingEmployees = false;
       notifyListeners();
     }
   }
@@ -123,13 +200,21 @@ class LeaveProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
-      final payload = {
+      final payload = <String, dynamic>{
         'leaveTypeId': selectedType!.id,
         'fromDate': LeaveModel.apiDate(startDate!),
         'toDate': LeaveModel.apiDate(endDate!),
         'reason': reasonController.text.trim(),
       };
-      print('LEAVE APPLY REQUEST: $payload');
+
+      // Managers applying on behalf of someone via Apply still use leaveRequests.
+      if (isManager &&
+          selectedEmployeeId != null &&
+          selectedEmployeeId!.isNotEmpty) {
+        payload['employeeId'] = selectedEmployeeId;
+      }
+
+      debugPrint('LEAVE APPLY REQUEST: $payload');
 
       final response = await ApiService().postRequest(
         ApiConstants.leaveRequests,
@@ -137,8 +222,8 @@ class LeaveProvider extends ChangeNotifier {
         data: payload,
       );
       final body = response.data;
-      print('LEAVE APPLY STATUS: ${response.statusCode}');
-      print('LEAVE APPLY BODY: $body');
+      debugPrint('LEAVE APPLY STATUS: ${response.statusCode}');
+      debugPrint('LEAVE APPLY BODY: $body');
 
       if (body is Map && body['success'] == true) {
         resetForm();
@@ -146,16 +231,59 @@ class LeaveProvider extends ChangeNotifier {
         return null;
       }
 
-      return body is Map
-          ? (body['message']?.toString() ??
-              body['error']?.toString() ??
-              'Could not apply leave')
-          : 'Could not apply leave';
+      return _messageFromBody(body, 'Could not apply leave');
     } catch (e) {
-      print('LEAVE APPLY ERROR: $e');
+      debugPrint('LEAVE APPLY ERROR: $e');
       return e.toString().replaceFirst('Exception: ', '');
     } finally {
       applying = false;
+      notifyListeners();
+    }
+  }
+
+  Future<String?> assignLeave() async {
+    final validation = validate(requireEmployee: true);
+    if (validation != null) return validation;
+
+    final headers = _authHeaders();
+    if (headers == null) return 'Please login again';
+
+    assigning = true;
+    notifyListeners();
+
+    try {
+      final payload = {
+        'employeeId': selectedEmployeeId,
+        'leaveTypeId': selectedType!.id,
+        'fromDate': LeaveModel.apiDate(startDate!),
+        'toDate': LeaveModel.apiDate(endDate!),
+        'reason': reasonController.text.trim(),
+      };
+      debugPrint('LEAVE ASSIGN REQUEST: $payload');
+
+      final response = await ApiService().postRequest(
+        ApiConstants.assignLeave,
+        headers: headers,
+        data: payload,
+      );
+      final body = response.data;
+      debugPrint('LEAVE ASSIGN STATUS: ${response.statusCode}');
+      debugPrint('LEAVE ASSIGN BODY: $body');
+
+      if ((response.statusCode == 200 || response.statusCode == 201) &&
+          body is Map &&
+          body['success'] == true) {
+        resetForm();
+        await loadRequests();
+        return null;
+      }
+
+      return _messageFromBody(body, 'Could not assign leave');
+    } catch (e) {
+      debugPrint('LEAVE ASSIGN ERROR: $e');
+      return e.toString().replaceFirst('Exception: ', '');
+    } finally {
+      assigning = false;
       notifyListeners();
     }
   }
@@ -164,34 +292,133 @@ class LeaveProvider extends ChangeNotifier {
     final headers = _authHeaders();
     if (headers == null) return 'Please login again';
 
-    cancellingId = id;
+    actionBusyId = id;
     notifyListeners();
 
     try {
-      print('LEAVE CANCEL REQUEST: $id');
+      debugPrint('LEAVE CANCEL REQUEST: $id');
       final response = await ApiService().postRequest(
         ApiConstants.leaveRequestCancel(id),
         headers: headers,
       );
       final body = response.data;
-      print('LEAVE CANCEL STATUS: ${response.statusCode}');
-      print('LEAVE CANCEL BODY: $body');
+      debugPrint('LEAVE CANCEL STATUS: ${response.statusCode}');
+      debugPrint('LEAVE CANCEL BODY: $body');
 
       if (body is Map && body['success'] == true) {
         await loadRequests();
         return null;
       }
 
-      return body is Map
-          ? (body['message']?.toString() ??
-              body['error']?.toString() ??
-              'Could not cancel leave')
-          : 'Could not cancel leave';
+      return _messageFromBody(body, 'Could not cancel leave');
     } catch (e) {
-      print('LEAVE CANCEL ERROR: $e');
+      debugPrint('LEAVE CANCEL ERROR: $e');
       return e.toString().replaceFirst('Exception: ', '');
     } finally {
-      cancellingId = null;
+      actionBusyId = null;
+      notifyListeners();
+    }
+  }
+
+  Future<String?> approveLeave(String id) async {
+    final headers = _authHeaders();
+    if (headers == null) return 'Please login again';
+
+    actionBusyId = id;
+    notifyListeners();
+
+    try {
+      debugPrint('LEAVE APPROVE REQUEST: $id');
+      final response = await ApiService().postRequest(
+        ApiConstants.leaveRequestApprove(id),
+        headers: headers,
+      );
+      final body = response.data;
+      debugPrint('LEAVE APPROVE STATUS: ${response.statusCode}');
+      debugPrint('LEAVE APPROVE BODY: $body');
+
+      if (body is Map && body['success'] == true) {
+        await loadRequests();
+        return null;
+      }
+
+      return _messageFromBody(body, 'Could not approve leave');
+    } catch (e) {
+      debugPrint('LEAVE APPROVE ERROR: $e');
+      return e.toString().replaceFirst('Exception: ', '');
+    } finally {
+      actionBusyId = null;
+      notifyListeners();
+    }
+  }
+
+  Future<String?> rejectLeave(String id) async {
+    final headers = _authHeaders();
+    if (headers == null) return 'Please login again';
+
+    actionBusyId = id;
+    notifyListeners();
+
+    try {
+      debugPrint('LEAVE REJECT REQUEST: $id');
+      final response = await ApiService().postRequest(
+        ApiConstants.leaveRequestReject(id),
+        headers: headers,
+      );
+      final body = response.data;
+      debugPrint('LEAVE REJECT STATUS: ${response.statusCode}');
+      debugPrint('LEAVE REJECT BODY: $body');
+
+      if (body is Map && body['success'] == true) {
+        await loadRequests();
+        return null;
+      }
+
+      return _messageFromBody(body, 'Could not reject leave');
+    } catch (e) {
+      debugPrint('LEAVE REJECT ERROR: $e');
+      return e.toString().replaceFirst('Exception: ', '');
+    } finally {
+      actionBusyId = null;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> leaveDetail(String leaveId) async {
+    isLeaveDetailLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      debugPrint('OPEN LEAVE DETAIL API');
+      debugPrint('LEAVE ID = $leaveId');
+
+      final headers = _authHeaders() ?? {'Authorization': 'Bearer $token'};
+      final response = await ApiService().getRequest(
+        '${ApiConstants.leaveRequests}/$leaveId',
+        headers: headers,
+      );
+
+      debugPrint('LEAVE DETAIL STATUS = ${response.statusCode}');
+      debugPrint('LEAVE DETAIL RESPONSE = ${response.data}');
+
+      if (response.statusCode == 200) {
+        final body = response.data;
+        if (body is Map) {
+          leaveDetailData =
+              LeaveDetailModel.fromJson(Map<String, dynamic>.from(body));
+        }
+        return leaveDetailData?.data != null;
+      }
+
+      errorMessage = 'Unable to load leave details';
+      return false;
+    } catch (e) {
+      debugPrint('LEAVE DETAIL ERROR = $e');
+      errorMessage = e.toString();
+      return false;
+    } finally {
+      isLeaveDetailLoading = false;
       notifyListeners();
     }
   }

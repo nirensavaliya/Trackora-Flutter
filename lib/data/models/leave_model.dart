@@ -5,25 +5,35 @@ class LeaveModel {
     required this.id,
     required this.typeId,
     required this.typeName,
+    this.typeCode = '',
     required this.startDate,
     required this.endDate,
     required this.reason,
     required this.status,
     this.days = 1,
+    this.employeeName = '',
   });
 
   final String id;
   final String typeId;
   final String typeName;
+  final String typeCode;
   final DateTime startDate;
   final DateTime endDate;
   final String reason;
   final LeaveRequestStatus status;
   final int days;
+  final String employeeName;
 
   factory LeaveModel.fromJson(Map<String, dynamic> json) {
     final leaveType = json['leaveType'] is Map
         ? Map<String, dynamic>.from(json['leaveType'] as Map)
+        : <String, dynamic>{};
+    final employee = json['employee'] is Map
+        ? Map<String, dynamic>.from(json['employee'] as Map)
+        : <String, dynamic>{};
+    final user = employee['user'] is Map
+        ? Map<String, dynamic>.from(employee['user'] as Map)
         : <String, dynamic>{};
     final from = DateTime.tryParse(json['fromDate']?.toString() ?? '')?.toLocal() ??
         DateTime.now();
@@ -32,12 +42,18 @@ class LeaveModel {
     return LeaveModel(
       id: json['id']?.toString() ?? '',
       typeId: json['leaveTypeId']?.toString() ?? leaveType['id']?.toString() ?? '',
-      typeName: leaveType['name']?.toString() ?? 'Leave',
+      typeName: leaveType['name']?.toString() ??
+          leaveType['code']?.toString() ??
+          'Leave',
+      typeCode: leaveType['code']?.toString() ?? '',
       startDate: from,
       endDate: to,
       reason: json['reason']?.toString() ?? '',
       status: _statusFromApi(json['status']?.toString()),
       days: int.tryParse('${json['days']}') ?? 1,
+      employeeName: user['name']?.toString() ??
+          employee['employeeCode']?.toString() ??
+          '',
     );
   }
 

@@ -176,6 +176,13 @@ class FaceVerifyProvider extends ChangeNotifier {
     matchPercent = result.matchPercent;
     matchDistance = result.distance.isFinite ? result.distance : 0;
 
+    print(
+      'FACE MATCH accuracy=${matchPercent.toStringAsFixed(1)}% '
+      'dist=${matchDistance.toStringAsFixed(3)} '
+      'passed=${result.passed} '
+      'need>=${FaceConstants.matchPercentThreshold.toStringAsFixed(0)}%',
+    );
+
     if (!result.passed) {
       phase = FaceVerifyPhase.failed;
       title = 'Match failed';
@@ -191,9 +198,11 @@ class FaceVerifyProvider extends ChangeNotifier {
     }
 
     if (forPunchIn) {
+      print('PUNCH IN local accuracy=${matchPercent.toStringAsFixed(1)}%');
       final punched = await _punchIn(embedding);
       if (!punched) return false;
     } else {
+      print('PUNCH OUT local accuracy=${matchPercent.toStringAsFixed(1)}%');
       final punched = await _punchOut(embedding);
       if (!punched) return false;
     }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trackora/core/constants/app_colors.dart';
 
+import '../../core/widgets/workforce_app_bar.dart';
+
 class ThoughtItem {
   const ThoughtItem({
     required this.id,
@@ -25,7 +27,7 @@ class DailyThoughtsScreen extends StatefulWidget {
 class _DailyThoughtsScreenState extends State<DailyThoughtsScreen> {
   final _search = TextEditingController();
 
-  final _thoughts = const [
+  final _thoughts = [
     ThoughtItem(
       id: '1',
       text:
@@ -73,29 +75,11 @@ class _DailyThoughtsScreenState extends State<DailyThoughtsScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.scaffoldBg,
-      appBar: AppBar(
-        backgroundColor: AppColors.scaffoldBg,
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textDark),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text(
-          'Daily Thoughts',
-          style: TextStyle(
-            fontFamily: 'Inter_Bold',
-            color: AppColors.textDark,
-            fontSize: 18,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.add, color: AppColors.textDark),
-          ),
-        ],
+      appBar: WorkforceAppBar(
+        title: 'Daily Thoughts',
+        actionLabel: 'Add thought',
+        decorated: true,
+        onTap: () {},
       ),
       body: Column(
         children: [
@@ -135,7 +119,14 @@ class _DailyThoughtsScreenState extends State<DailyThoughtsScreen> {
               itemCount: list.length,
               separatorBuilder: (_, __) => const SizedBox(height: 14),
               itemBuilder: (context, index) {
-                return _ThoughtCard(index: index + 1, item: list[index]);
+                return _ThoughtCard(
+                  item: list[index],
+                  onDelete: () {
+                    setState(() {
+                      _thoughts.removeWhere((thought) => thought.id == list[index].id);
+                    });
+                  },
+                );
               },
             ),
           ),
@@ -146,96 +137,154 @@ class _DailyThoughtsScreenState extends State<DailyThoughtsScreen> {
 }
 
 class _ThoughtCard extends StatelessWidget {
-  const _ThoughtCard({required this.index, required this.item});
+  const _ThoughtCard({required this.item, required this.onDelete});
 
-  final int index;
   final ThoughtItem item;
+  final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 14, 8, 14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        border: Border.all(color: const Color(0xFFE8EEF2)),
       ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 2),
+          const Positioned(
+            right: 16,
+            top: 4,
             child: Text(
-              '$index',
-              style: const TextStyle(
-                fontFamily: 'Inter_SemiBold',
-                color: AppColors.textGrey,
-                fontSize: 14,
+              '\u201C',
+              style: TextStyle(
+                fontFamily: 'Inter_Bold',
+                fontSize: 72,
+                height: 1,
+                color: Color(0xFFE4EEEC),
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.text,
-                  style: const TextStyle(
-                    fontFamily: 'Inter_SemiBold',
-                    color: AppColors.textDark,
-                    fontSize: 14,
-                    height: 1.4,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 16, 18, 16),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(width: 16),
+                  const ColoredBox(
+                    color: Color(0xFF3DCEC0),
+                    child: SizedBox(width: 3),
                   ),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Text(
-                      item.date,
-                      style: const TextStyle(
-                        fontFamily: 'Inter_Regular',
-                        color: AppColors.textGrey,
-                        fontSize: 12,
-                      ),
-                    ),
-                    const Spacer(),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.appColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: const Text(
-                        'Active',
-                        style: TextStyle(
-                          fontFamily: 'Inter_Medium',
-                          color: Colors.white,
-                          fontSize: 11,
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.text,
+                          style: const TextStyle(
+                            fontFamily: 'Inter_Bold',
+                            color: Color(0xFF1E293B),
+                            fontSize: 16,
+                            height: 1.35,
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                item.date,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontFamily: 'Inter_Regular',
+                                  color: Color(0xFF94A3B8),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              height: 32,
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFE8FBF3),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 7,
+                                    height: 7,
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFF169A62),
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    item.active ? 'Active' : 'Inactive',
+                                    style: const TextStyle(
+                                      fontFamily: 'Inter_Bold',
+                                      color: Color(0xFF157A4A),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Material(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              child: InkWell(
+                                onTap: onDelete,
+                                borderRadius: BorderRadius.circular(12),
+                                child: Container(
+                                  height: 32,
+                                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    border: Border.all(
+                                      color: const Color(0xFFE2E8F0),
+                                    ),
+                                  ),
+                                  child: const Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.delete_outline,
+                                        size: 16,
+                                        color: Color(0xFF64748B),
+                                      ),
+                                      SizedBox(width: 4),
+                                      Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                          fontFamily: 'Inter_Bold',
+                                          color: Color(0xFF334155),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             ),
-          ),
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: AppColors.textGrey),
-            onSelected: (_) {},
-            itemBuilder: (context) => const [
-              PopupMenuItem(value: 'edit', child: Text('Edit')),
-              PopupMenuItem(value: 'delete', child: Text('Delete')),
-            ],
           ),
         ],
       ),

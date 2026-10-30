@@ -3,7 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:trackora/app/routes.dart';
 import 'package:trackora/core/constants/app_colors.dart';
 import 'package:trackora/core/widgets/app_loader.dart';
 
@@ -22,43 +21,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     final signup = context.watch<SignUpProvider>();
     return Scaffold(
-      backgroundColor: const Color(0xFFF0F7F6),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: const Color(0xFFF0F7F6),
-        surfaceTintColor: Colors.transparent,
-        elevation: 0,
-        leadingWidth: 72,
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 16),
-          child: Material(
-            color: Colors.white,
-            shape: const CircleBorder(),
-            elevation: 1,
-            child: IconButton(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(
-                Icons.chevron_left,
-                color: AppColors.textDark,
-                size: 28,
-              ),
-            ),
-          ),
-        ),
-        centerTitle: true,
-        title: Text(
-          'Create Account',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontFamily: 'Inter_Bold',
-            color: AppColors.textDark,
-            fontSize: 25,
-            height: 1.2,
-          ),
-        ),
-      ),
+      backgroundColor: Colors.white,
+      // appBar: AppBar(
+      //   automaticallyImplyLeading: false,
+      //   backgroundColor: const Color(0xFFF0F7F6),
+      //   surfaceTintColor: Colors.transparent,
+      //   elevation: 0,
+      //   leadingWidth: 72,
+      //   leading: Padding(
+      //     padding: const EdgeInsets.only(left: 16),
+      //     child: Material(
+      //       color: Colors.white,
+      //       shape: const CircleBorder(),
+      //       elevation: 1,
+      //       child: IconButton(
+      //         onPressed: () => Navigator.pop(context),
+      //         icon: const Icon(
+      //           Icons.chevron_left,
+      //           color: AppColors.textDark,
+      //           size: 28,
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      //   centerTitle: true,
+      //   title: Text(
+      //     'Create Account',
+      //     textAlign: TextAlign.center,
+      //     style: TextStyle(
+      //       fontFamily: 'Inter_Bold',
+      //       color: AppColors.textDark,
+      //       fontSize: 25,
+      //       height: 1.2,
+      //     ),
+      //   ),
+      // ),
       body: Stack(
         children: [
+          const Positioned(
+            top: -26,
+            right: -28,
+            child: _TopRightDecor(),
+          ),
+          const Positioned(
+            right: 0,
+            bottom: 0,
+            child: _BottomLeftDecor(),
+          ),
           SafeArea(
             child: Column(
               children: [
@@ -70,7 +79,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const SizedBox(height: 24),
+                        Text(
+                        'Register company',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontFamily: 'Inter_Bold',
+                          color: Color(0xff0F172A),
+                          fontSize: 32,
+                          height: 1.2,
+                        ),
+                        ),
+                          SizedBox(height: 10),
+                          Text(
+                            'First user becomes Admin.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: 'Inter_Regular',
+                              color: Color(0xff64748B),
+                              fontSize: 15,
+                              height: 1.2,
+                            ),
+                          ),
+                           SizedBox(height: 24),
                           _Field(
                             label: 'Company Name',
                             controller: signup.company,
@@ -236,8 +266,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           const SizedBox(height: 22),
                           SizedBox(
-                            width: double.infinity,
-                            height: 54,
+                            width: 180,
+                            height: 50,
                             child: ElevatedButton(
                               onPressed: signup.isLoading ? null : () => signup.onSignUp(context),
                               style: ElevatedButton.styleFrom(
@@ -245,7 +275,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 foregroundColor: Colors.white,
                                 elevation: 0,
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
                               child: const Text(
@@ -258,33 +288,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                           ),
                           const SizedBox(height: 16),
-                          Center(
-                            child: Text.rich(
-                              TextSpan(
-                                text: 'Already registered? ',
-                                style: const TextStyle(
-                                  fontFamily: 'Inter_Regular',
-                                  color: AppColors.textGrey,
-                                  fontSize: 14,
-                                ),
-                                children: [
-                                  WidgetSpan(
-                                    alignment: PlaceholderAlignment.baseline,
-                                    baseline: TextBaseline.alphabetic,
-                                    child: GestureDetector(
-                                      onTap: () => Navigator.pop(context),
-                                      child: const Text(
-                                        'Login',
-                                        style: TextStyle(
-                                          fontFamily: 'Inter_SemiBold',
-                                          color: AppColors.appColor,
-                                          fontSize: 14,
-                                        ),
+                          Text.rich(
+                            TextSpan(
+                              text: 'Already registered? ',
+                              style: const TextStyle(
+                                fontFamily: 'Inter_Regular',
+                                color: Color(0xff64748B),
+                                fontSize: 14,
+                              ),
+                              children: [
+                                WidgetSpan(
+                                  alignment: PlaceholderAlignment.baseline,
+                                  baseline: TextBaseline.alphabetic,
+                                  child: GestureDetector(
+                                    onTap: () => Navigator.pop(context),
+                                    child: const Text(
+                                      ' Log In',
+                                      style: TextStyle(
+                                        fontFamily: 'Inter_SemiBold',
+                                        color: AppColors.appColor,
+                                        fontSize: 14,
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -302,6 +330,74 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
+
+class _TopRightDecor extends StatelessWidget {
+  const _TopRightDecor();
+
+  static const _fill = Color(0xFF92BCB7);
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Transform.rotate(
+        angle: 0.17,
+        child: Container(
+          width: 134.43,
+          height: 77,
+          decoration: ShapeDecoration(
+            color: _fill.withValues(alpha: 0.2),
+            shape: const OvalBorder(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BottomLeftDecor extends StatelessWidget {
+  const _BottomLeftDecor();
+
+  static const _outer = Color(0xFFE6F0EE);
+  static const _inner = Color(0xFF8FB3B0);
+  static const double _outerSize = 125;
+  static const double _innerSize = 90;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: SizedBox(
+        width: _outerSize,
+        height: _outerSize,
+        child: Stack(
+          alignment: Alignment.bottomRight,
+          children: [
+            Container(
+              width: _outerSize,
+              height: _outerSize,
+              decoration: const BoxDecoration(
+                color: _outer,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(_outerSize),
+                ),
+              ),
+            ),
+            Container(
+              width: _innerSize,
+              height: _innerSize,
+              decoration: const BoxDecoration(
+                color: _inner,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(_innerSize),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class _OfficeMap extends StatefulWidget {
   const _OfficeMap({
@@ -462,8 +558,8 @@ class _Field extends StatelessWidget {
           label,
           style: const TextStyle(
             fontFamily: 'Inter_SemiBold',
-            color: AppColors.appColor,
-            fontSize: 13,
+            color: Color(0xff334155),
+            fontSize: 14,
           ),
         ),
         const SizedBox(height: 8),
@@ -490,7 +586,7 @@ class _Field extends StatelessWidget {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFDDE4E2)),
+              borderSide: const BorderSide(color: Color(0xffD7EAE7)),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

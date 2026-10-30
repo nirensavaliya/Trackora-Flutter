@@ -48,7 +48,8 @@ class FaceMatcher {
     return FaceMatchResult(
       distance: bestDist,
       matchPercent: percent,
-      passed: bestDist <= FaceConstants.euclideanMatchThreshold,
+      passed: bestDist <= FaceConstants.euclideanMatchThreshold &&
+          percent >= FaceConstants.matchPercentThreshold,
     );
   }
 }

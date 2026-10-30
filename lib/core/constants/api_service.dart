@@ -1,5 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:trackora/core/constants/api_constants.dart';
+
+import '../../app/app.dart';
+import '../../app/routes.dart';
+import '../storage/local_storage.dart';
 
 
 class ApiService {
@@ -8,7 +13,8 @@ class ApiService {
   factory ApiService() => _instance;
 
   late Dio _dio;
-
+  static bool _isLoggingOut = false;
+  static bool _logoutNavigationScheduled = false;
   ApiService._internal() {
     _createDio();
   }
@@ -37,28 +43,77 @@ class ApiService {
 
     _dio.interceptors.add(
       InterceptorsWrapper(
-        onError: (error, handler) async {
-          final path = error.requestOptions.path;
-          //
-          // if (error.response?.statusCode == 401) {
-          //   if (path.contains(ApiConstants.login) ||
-          //       path.contains(ApiConstants.deletePassword) ||
-          //       path.contains(ApiConstants.editUser) ||
-          //       path.contains(ApiConstants.dashBoardTransaction) ||
-          //       path.contains(ApiConstants.summary)) {
-          //     return handler.next(error);
-          //   }
-          //   print("⚠️ Token expired → Auto logout");
-          //
-          //   await GetStorageData.removeData(GetStorageData.token);
-          //   await GetStorageData.removeData(GetStorageData.userType);
-          //   await GetStorageData.removeData(GetStorageData.isOtpVerified);
-          //
-          //   Get.offAllNamed(AppRoutes.loginScreen);
-          // }
 
-          return handler.next(error);
+        onError: (error, handler) async {
+          if (error.response?.statusCode == 401) {
+            debugPrint(
+              '401 Unauthorized: ${error.requestOptions.path}',
+            );
+
+            if (!_isLoggingOut) {
+              _isLoggingOut = true;
+
+              try {
+                await GetStorageData.removeData(GetStorageData.token);
+                await GetStorageData.removeData(GetStorageData.loginData);
+                await GetStorageData.removeData(GetStorageData.userType);
+                await GetStorageData.removeData(
+                  GetStorageData.isOtpVerified,
+                );
+
+                if (!_logoutNavigationScheduled) {
+                  _logoutNavigationScheduled = true;
+
+                  final navigator = navigatorKey.currentState;
+
+                  debugPrint('Navigator available: ${navigator != null}');
+
+                  if (navigator != null) {
+                    navigator.pushNamedAndRemoveUntil(
+                      AppRoutes.loginScreen,
+                          (route) => false,
+                    );
+                  } else {
+                    _logoutNavigationScheduled = false;
+                    debugPrint('Navigator is null; navigation not performed.');
+                  }
+                }
+              } catch (e, stackTrace) {
+                debugPrint('Logout failed: $e');
+                debugPrintStack(stackTrace: stackTrace);
+                _isLoggingOut = false;
+              }
+            }
+          }
+
+          handler.next(error);
         },
+
+        // onError: (error, handler) async {
+        //   final path = error.requestOptions.path;
+        //
+        //   if (error.response?.statusCode == 401) {
+        //     if (path.contains(ApiConstants.login) ||
+        //         path.contains(ApiConstants.earning) ||
+        //         path.contains(ApiConstants.registerTenant) ||
+        //         path.contains(ApiConstants.employees) ||
+        //         path.contains(ApiConstants.tasks) ||
+        //         path.contains(ApiConstants.attendance)) {
+        //       return handler.next(error);
+        //     }
+        //     print("⚠️ Token expired → Auto logout");
+        //
+        //     await GetStorageData.removeData(GetStorageData.token);
+        //     await GetStorageData.removeData(GetStorageData.userType);
+        //     await GetStorageData.removeData(GetStorageData.isOtpVerified);
+        //
+        //     navigatorKey.currentState?.pushNamedAndRemoveUntil(
+        //       AppRoutes.loginScreen,
+        //           (route) => false,
+        //     );          }
+        //
+        //   return handler.next(error);
+        // },
       ),
     );
   }

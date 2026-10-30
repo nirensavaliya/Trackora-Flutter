@@ -10,10 +10,10 @@ PODS:
     - Flutter
     - Google-Maps-iOS-Utils (< 7.0, >= 5.0)
     - GoogleMaps (< 11.0, >= 8.4)
-  - google_mlkit_commons (0.12.0):
+  - google_mlkit_commons (0.13.0):
     - Flutter
     - MLKitVision (~> 10.0.0)
-  - google_mlkit_face_detection (0.14.0):
+  - google_mlkit_face_detection (0.15.1):
     - Flutter
     - google_mlkit_commons
     - GoogleMLKit/FaceDetection (~> 9.0.0)
@@ -145,12 +145,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   camera_avfoundation: 968a9a5323c79a99c166ad9d7866bfd2047b5a9b
-  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  Flutter: 71a624a5bc0c04062bf19101d501e466baf2fb47
   fluttertoast: fe6790210fdba20801685be946e3a2124b72eef5
   Google-Maps-iOS-Utils: 0a484b05ed21d88c9f9ebbacb007956edd508a96
   google_maps_flutter_ios: 17552876e72723da1d41accc22f03b5f7afbde69
-  google_mlkit_commons: b4dfe2f6ae4cbf24010dc6640a28984d01343c86
-  google_mlkit_face_detection: 21baa82ab858694c846f0e0bfa64e3a3ca7bceda
+  google_mlkit_commons: b2c0a76e7ef4ff555e70e5d71f21d66ce3d08a97
+  google_mlkit_face_detection: 84144f185c47be63638e22fdd81bbb781875a35b
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleMaps: 0608099d4870cac8754bdba9b6953db543432438
   GoogleMLKit: b1eee21a41c57704fe72483b15c85cb2c0cd7444
@@ -171,4 +171,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 2add439fcdb8858d123f011db3c830c1b7b0b03a
 
-COCOAPODS: 1.16.2
+COCOAPODS: 1.17.0

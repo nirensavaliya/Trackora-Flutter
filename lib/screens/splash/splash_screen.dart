@@ -1,132 +1,188 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:trackora/core/constants/app_images.dart';
 import 'package:trackora/screens/splash/providers/splash_provider.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
+  static const _designWidth = 390.0;
+  static bool _wavesPrecached = false;
+
   @override
   Widget build(BuildContext context) {
-    return  Consumer<SplashProvider>(
+    if (!_wavesPrecached) {
+      _wavesPrecached = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) {
+          precacheImage(AppImages.homeHeaderWaves, context);
+        }
+      });
+    }
+    return Consumer<SplashProvider>(
       builder: (context, splash, _) {
         if (splash.status != SplashStatus.loading) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            if (context.mounted) splash.navigateOnce(context);
+            if (context.mounted) {
+              splash.navigateOnce(context);
+            }
           });
         }
-        return Scaffold(
-          body: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/img_splash_bg.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: SafeArea(
-              child: Column(
-                children: [
-                  // const SizedBox(height: 24),
-                  Image.asset(
-                    'assets/images/Icon (1).png',
-                  ),
-                  const SizedBox(height: 8),
-                  _SplashBranding(),
 
-                ],
-              ),
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.dark.copyWith(
+            statusBarColor: Colors.transparent,
+          ),
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            body: LayoutBuilder(
+              builder: (context, constraints) {
+                final w = constraints.maxWidth;
+                final s = w / _designWidth;
+
+                return Stack(
+                  clipBehavior: Clip.hardEdge,
+                  children: [
+                    Positioned(
+                      left: -65 * s,
+                      top: -21 * s,
+                      child: _GradientBlob(size: 220 * s),
+                    ),
+                    Positioned(
+                      left: -90 * s,
+                      top: 140 * s,
+                      child: _GradientBlob(size: 150 * s),
+                    ),
+
+                    Positioned(
+                      right: -70 * s,
+                      bottom: -40 * s,
+                      child: _GradientBlob(size: 220 * s),
+                    ),
+                    Positioned(
+                      right: -50 * s,
+                      bottom: 130 * s,
+                      child: _GradientBlob(size: 140 * s),
+                    ),
+
+                    Positioned(
+                      right: -90 * s,
+                      top: -90 * s,
+                      child: _OutlineRings(
+                        size: 200 * s,
+                        strokeWidth: 1.2 * s,
+                      ),
+                    ),
+
+                    Positioned(
+                      left: -90 * s,
+                      bottom: -90 * s,
+                      child: _OutlineRings(
+                        size: 200 * s,
+                        strokeWidth: 1.2 * s,
+                      ),
+                    ),
+
+                    Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Image.asset(
+                            AppImages.splashLogo,
+                            width: 130 * s,
+                            height: 130 * s,
+                            fit: BoxFit.contain,
+                          ),
+                          SizedBox(height: 16 * s),
+                          Text(
+                            'TRACKORA',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.cinzel(
+                              fontSize: 40 * s,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 3.2 * s,
+                              color: const Color(0xFF38847C),
+                              height: 1.1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                );
+              },
             ),
           ),
         );
-      }
+      },
     );
   }
 }
 
+class _GradientBlob extends StatelessWidget {
+  const _GradientBlob({required this.size});
 
+  final double size;
 
-class _SplashBranding extends StatelessWidget {
-  const _SplashBranding();
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      children: [
-        _TrackoraMark(),
-        SizedBox(height: 16),
-        Text(
-          'Trackora',
-          style: TextStyle(
-            fontFamily: 'Inter_Bold',
-            color: Colors.white,
-            fontSize: 36,
-            height: 1.1,
-            letterSpacing: -0.3,
-          ),
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+          colors: [
+            const Color(0xFF38847C),
+            const Color(0xFF92BCB7).withValues(alpha: 0.65),
+          ],
         ),
-        SizedBox(height: 10),
-        Text(
-          'WORKFORCE INTELLIGENCE',
-          style: TextStyle(
-            fontFamily: 'Inter_Medium',
-            color: Color(0xFFB7D4CF),
-            fontSize: 11,
-            letterSpacing: 2.8,
-            height: 1.2,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
-class _TrackoraMark extends StatelessWidget {
-  const _TrackoraMark();
+
+class _OutlineRings extends StatelessWidget {
+  const _OutlineRings({
+    required this.size,
+    required this.strokeWidth,
+  });
+
+  final double size;
+  final double strokeWidth;
+
   @override
   Widget build(BuildContext context) {
-    return const SizedBox(
-      width: 52,
-      height: 52,
-      child: CustomPaint(painter: _TrackoraMarkPainter()),
+    return CustomPaint(
+      size: Size(size, size),
+      painter: _RingsPainter(strokeWidth: strokeWidth),
     );
   }
 }
 
+class _RingsPainter extends CustomPainter {
+  const _RingsPainter({required this.strokeWidth});
 
-class _TrackoraMarkPainter extends CustomPainter {
-  const _TrackoraMarkPainter();
+  final double strokeWidth;
+
   @override
   void paint(Canvas canvas, Size size) {
-    final c = Offset(size.width / 2, size.height / 2);
-    final r = size.width / 2 - 1.5;
-    final ring = Paint()
-      ..color = Colors.white
+    final center = Offset(size.width / 2, size.height / 2);
+    final paint = Paint()
+      ..color = const Color(0xFF38847C).withValues(alpha: 0.28)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 0;
-    canvas.drawCircle(c, r, ring);
-    final bar = Paint()
-      ..color = Colors.white
-      ..strokeWidth = 3.2
-      ..strokeCap = StrokeCap.round;
-    canvas.drawLine(
-      Offset(c.dx, c.dy - r * 0.42),
-      Offset(c.dx, c.dy + r * 0.42),
-      bar,
-    );
-    canvas.drawLine(
-      Offset(c.dx - r * 0.34, c.dy),
-      Offset(c.dx + r * 0.34, c.dy),
-      bar,
-    );
-    final glow = Paint()
-      ..color = const Color(0xFF5EEAD4)
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
-    canvas.drawCircle(Offset(c.dx, c.dy - r * 0.42), 3.2, glow);
-    canvas.drawCircle(
-      Offset(c.dx, c.dy - r * 0.42),
-      2.2,
-      Paint()..color = const Color(0xFF5EEAD4),
-    );
+      ..strokeWidth = strokeWidth;
+
+    final outer = size.width / 2;
+    canvas.drawCircle(center, outer * 0.92, paint);
+    canvas.drawCircle(center, outer * 0.72, paint);
   }
+
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _RingsPainter oldDelegate) =>
+      oldDelegate.strokeWidth != strokeWidth;
 }

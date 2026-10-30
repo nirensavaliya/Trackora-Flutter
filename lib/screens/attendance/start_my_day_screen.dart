@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:trackora/app/routes.dart';
@@ -115,8 +114,8 @@ class StartMyDayScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushNamedAndRemoveUntil(
                       context,
-                      AppRoutes.homeScreen, // "/HomeScreen"
-                          (route) => false,     // peechhli har route hatao
+                      AppRoutes.homeScreen,
+                          (route) => false,
                     );
                   },
                   style: ElevatedButton.styleFrom(

@@ -101,17 +101,26 @@ class AppLoaderOverlay extends StatelessWidget {
     return const AbsorbPointer(
       child: ColoredBox(
         color: Color(0x66000000),
-        child: Center(
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(28),
-              child: AppLoader(),
-            ),
-          ),
+        child: AppLoaderCard(),
+      ),
+    );
+  }
+}
+
+class AppLoaderCard extends StatelessWidget {
+  const AppLoaderCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(28),
+          child: AppLoader(),
         ),
       ),
     );

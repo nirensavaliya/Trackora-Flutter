@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
-import '../../../core/constants/api_constants.dart';
-import '../../../core/constants/api_service.dart';
-import '../../../core/storage/local_storage.dart';
+import 'package:trackora/core/constants/api_constants.dart';
+import 'package:trackora/core/constants/api_service.dart';
+import 'package:trackora/core/storage/local_storage.dart';
+import 'package:trackora/data/models/employee_model.dart';
+import 'package:trackora/data/models/leave_balance_model.dart';
+import 'package:trackora/data/models/leave_model.dart';
 
 enum DayPeriod { morning, afternoon, evening }
 
@@ -26,7 +28,44 @@ class HomeProvider extends ChangeNotifier {
   double monthlySalary = 0;
   String attendanceStatus = 'ABSENT';
 
+  List<LeaveBalance> leaveBalances = [];
+  List<LeaveModel> recentLeaves = [];
+  List<Employee> employees = [];
+  int teamPunchedInCount = 0;
+
+  String get userRole =>
+      (GetStorageData.readString(GetStorageData.userType) ?? '')
+          .trim()
+          .toUpperCase();
+
+  bool get isUser => userRole == 'USER';
+
+  bool get isHr => userRole == 'HR';
+
+  bool get isAdmin => userRole == 'ADMIN';
+
+  bool get isManager => isHr || isAdmin;
+
+  bool get showPunchCard => isUser || isHr;
+
+  int get pendingLeaveCount => recentLeaves
+      .where((l) => l.status == LeaveRequestStatus.pending)
+      .length;
+
+  int get leaveLeftTotal {
+    var total = 0;
+    for (final b in leaveBalances) {
+      total += b.remainingDays;
+    }
+    return total < 0 ? 0 : total;
+  }
+
+  int get peopleCount => employees.length;
+
   String get attendanceStatusLabel {
+    if (isAdmin) {
+      return '$teamPunchedInCount punched';
+    }
     if (isPunchedIn || isPunchedOut) return 'PRESENT';
     final value = attendanceStatus.trim();
     if (value.isEmpty) return 'ABSENT';
@@ -77,17 +116,37 @@ class HomeProvider extends ChangeNotifier {
     return '${days[now.weekday - 1]}, ${now.day} ${months[now.month - 1]}';
   }
 
-  HomeProvider(){
+  Map<String, String>? _authHeaders() {
+    final token = GetStorageData.readString(GetStorageData.token)?.toString();
+    if (token == null || token.isEmpty) return null;
+    return {
+      'Authorization': 'Bearer $token',
+      'accept': 'application/json',
+    };
+  }
+
+  HomeProvider() {
     refreshSession();
   }
 
   Future<void> refreshSession() async {
     loadUser();
-    await Future.wait([
+    final futures = <Future>[
       loadTaskSummary(),
       loadEarnings(),
-      loadTodayAttendance(),
-    ]);
+      loadLeaveBalances(),
+      loadRecentLeaves(),
+    ];
+    if (showPunchCard) {
+      futures.add(loadTodayAttendance());
+    }
+    if (isManager) {
+      futures.add(loadEmployees());
+    }
+    if (isAdmin) {
+      futures.add(loadTeamPunchedInToday());
+    }
+    await Future.wait(futures);
   }
 
   void resetSession() {
@@ -101,6 +160,10 @@ class HomeProvider extends ChangeNotifier {
     netPay = 0;
     monthlySalary = 0;
     attendanceStatus = 'ABSENT';
+    leaveBalances = [];
+    recentLeaves = [];
+    employees = [];
+    teamPunchedInCount = 0;
     _clock?.cancel();
     _clock = null;
     notifyListeners();
@@ -138,9 +201,8 @@ class HomeProvider extends ChangeNotifier {
     return '$hours:$minutes:$seconds';
   }
 
-  String get netPayText {
-    return _formatInr(netPay);
-  }
+  String get netPayText => _formatInr(netPay);
+
   String _formatInr(num amount) {
     final n = amount.round();
     final s = n.toString();
@@ -149,7 +211,7 @@ class HomeProvider extends ChangeNotifier {
     final rest = s.substring(0, s.length - 3);
     final withCommas = rest.replaceAllMapped(
       RegExp(r'(\d)(?=(\d{2})+(?!\d))'),
-          (m) => '${m[1]},',
+      (m) => '${m[1]},',
     );
     return '₹$withCommas,$last3';
   }
@@ -190,14 +252,14 @@ class HomeProvider extends ChangeNotifier {
 
   Future<void> loadTaskSummary() async {
     try {
-      final token = GetStorageData.readString(GetStorageData.token)?.toString();
-      if (token == null || token.isEmpty) return;
+      final headers = _authHeaders();
+      if (headers == null) return;
       final response = await ApiService().getRequest(
         ApiConstants.taskSummary,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: headers,
       );
       final body = response.data;
-      print('TASK SUMMARY: $body');
+      debugPrint('TASK SUMMARY: $body');
       if (body is Map && body['success'] == true && body['data'] is Map) {
         final data = Map<String, dynamic>.from(body['data'] as Map);
         final counts = data['counts'] is Map
@@ -209,20 +271,20 @@ class HomeProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('TASK SUMMARY ERROR: $e');
+      debugPrint('TASK SUMMARY ERROR: $e');
     }
   }
 
   Future<void> loadEarnings() async {
     try {
-      final token = GetStorageData.readString(GetStorageData.token)?.toString();
-      if (token == null || token.isEmpty) return;
+      final headers = _authHeaders();
+      if (headers == null) return;
       final response = await ApiService().getRequest(
         ApiConstants.earnings,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: headers,
       );
       final body = response.data;
-      print('EARNINGS: $body');
+      debugPrint('EARNINGS: $body');
       if (body is Map && body['success'] == true && body['data'] is Map) {
         final data = Map<String, dynamic>.from(body['data'] as Map);
         netPay = double.tryParse('${data['netPay']}') ?? 0;
@@ -230,24 +292,127 @@ class HomeProvider extends ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print('EARNINGS ERROR: $e');
+      debugPrint('EARNINGS ERROR: $e');
+    }
+  }
+
+  Future<void> loadLeaveBalances() async {
+    try {
+      final headers = _authHeaders();
+      if (headers == null) return;
+      final response = await ApiService().getRequest(
+        ApiConstants.leaveBalance,
+        headers: headers,
+      );
+      final body = response.data;
+      debugPrint('LEAVE BALANCE: $body');
+      if (body is Map) {
+        final parsed = LeaveBalanceResponse.fromJson(
+          Map<String, dynamic>.from(body),
+        );
+        leaveBalances = parsed.data ?? [];
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('LEAVE BALANCE ERROR: $e');
+    }
+  }
+
+  Future<void> loadRecentLeaves() async {
+    try {
+      final headers = _authHeaders();
+      if (headers == null) return;
+      final response = await ApiService().getRequest(
+        ApiConstants.leaveRequests,
+        queryParams: {'pageSize': 10},
+        headers: headers,
+      );
+      final body = response.data;
+      debugPrint('RECENT LEAVES: $body');
+      if (body is Map && body['success'] == true) {
+        final data = body['data'];
+        final items = data is Map ? data['items'] : null;
+        if (items is List) {
+          recentLeaves = items
+              .whereType<Map>()
+              .map((e) => LeaveModel.fromJson(Map<String, dynamic>.from(e)))
+              .toList();
+          notifyListeners();
+        }
+      }
+    } catch (e) {
+      debugPrint('RECENT LEAVES ERROR: $e');
+    }
+  }
+
+  Future<void> loadEmployees() async {
+    if (!isManager) return;
+    try {
+      final headers = _authHeaders();
+      if (headers == null) return;
+      final response = await ApiService().getRequest(
+        ApiConstants.getEmployees,
+        headers: headers,
+      );
+      final body = response.data;
+      debugPrint('HOME EMPLOYEES: $body');
+      if (body is Map) {
+        final parsed =
+            EmployeeResponse.fromJson(Map<String, dynamic>.from(body));
+        employees = parsed.data ?? [];
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('HOME EMPLOYEES ERROR: $e');
+    }
+  }
+
+  Future<void> loadTeamPunchedInToday() async {
+    if (!isAdmin) return;
+    try {
+      final headers = _authHeaders();
+      if (headers == null) return;
+      final now = DateTime.now();
+      final day =
+          '${now.year.toString().padLeft(4, '0')}-'
+          '${now.month.toString().padLeft(2, '0')}-'
+          '${now.day.toString().padLeft(2, '0')}';
+      final response = await ApiService().getRequest(
+        ApiConstants.attendance,
+        queryParams: {'from': day, 'to': day},
+        headers: headers,
+      );
+      final body = response.data;
+      debugPrint('TEAM ATTENDANCE TODAY: $body');
+      if (body is Map && body['data'] is List) {
+        teamPunchedInCount = (body['data'] as List).where((item) {
+          if (item is! Map) return false;
+          final checkIn = item['checkInAt']?.toString();
+          final checkOut = item['checkOutAt']?.toString();
+          return checkIn != null &&
+              checkIn.isNotEmpty &&
+              (checkOut == null || checkOut.isEmpty);
+        }).length;
+        notifyListeners();
+      }
+    } catch (e) {
+      debugPrint('TEAM ATTENDANCE ERROR: $e');
     }
   }
 
   Future<void> loadTodayAttendance() async {
     try {
-      final token = GetStorageData.readString(GetStorageData.token)?.toString();
-      if (token == null || token.isEmpty) return;
+      final headers = _authHeaders();
+      if (headers == null) return;
       final response = await ApiService().getRequest(
         ApiConstants.attendanceToday,
-        headers: {'Authorization': 'Bearer $token'},
+        headers: headers,
       );
       final body = response.data;
-      print('ATTENDANCE TODAY STATUS: ${response.statusCode}');
-      print('ATTENDANCE TODAY BODY: $body');
+      debugPrint('ATTENDANCE TODAY STATUS: ${response.statusCode}');
+      debugPrint('ATTENDANCE TODAY BODY: $body');
       if (body is! Map || body['success'] != true) return;
       final data = body['data'];
-      // No attendance today
       if (data == null) {
         if (isPunchedIn) {
           attendanceStatus = 'PRESENT';
@@ -271,8 +436,10 @@ class HomeProvider extends ChangeNotifier {
       final checkInAt = map['checkInAt']?.toString();
       final checkOutAt = map['checkOutAt']?.toString();
       final apiStatus = map['status']?.toString().trim() ?? '';
-      print('ATTENDANCE status: $apiStatus');
-      if (checkInAt != null && checkInAt.isNotEmpty && (checkOutAt == null || checkOutAt.isEmpty)) {
+      debugPrint('ATTENDANCE status: $apiStatus');
+      if (checkInAt != null &&
+          checkInAt.isNotEmpty &&
+          (checkOutAt == null || checkOutAt.isEmpty)) {
         isPunchedIn = true;
         punchedInAt = DateTime.tryParse(checkInAt)?.toLocal();
         punchedOutAt = null;
@@ -293,7 +460,7 @@ class HomeProvider extends ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-      print('ATTENDANCE TODAY ERROR: $e');
+      debugPrint('ATTENDANCE TODAY ERROR: $e');
     }
   }
 

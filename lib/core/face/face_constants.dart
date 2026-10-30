@@ -1,12 +1,12 @@
 class FaceConstants {
-  /// Euclidean distance must be <= this to count as a match.
-  static const double euclideanMatchThreshold = 0.80;
+  /// Euclidean distance must be <= this to count as a match (~80% UI).
+  static const double euclideanMatchThreshold = 0.64;
 
-  /// Maps distance → UI %. Threshold distance maps to 75%.
-  static const double distancePercentScale = euclideanMatchThreshold / 0.25;
+  /// Maps distance → UI %. Threshold distance maps to 80%.
+  static const double distancePercentScale = euclideanMatchThreshold / 0.20;
 
   /// Display pass line (aligned with [euclideanMatchThreshold]).
-  static const double matchPercentThreshold = 75.0;
+  static const double matchPercentThreshold = 80.0;
 
   static const int embeddingSize = 192;
   static const int modelInputSize = 112;

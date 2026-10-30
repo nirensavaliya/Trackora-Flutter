@@ -5,8 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image/image.dart' as img;
 
-/// Copies camera-plane bytes so they stay valid after the next frame.
-
 InputImage? inputImageFromCameraImage({
   required CameraImage image,
   required CameraController controller,

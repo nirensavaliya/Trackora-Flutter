@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:trackora/app/routes.dart';
 import 'package:trackora/core/constants/app_colors.dart';
 import 'package:trackora/core/widgets/app_loader.dart';
 
+import '../../../core/constants/app_images.dart';
 import '../providers/login_provider.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -18,9 +20,20 @@ class LoginScreen extends StatelessWidget {
         statusBarColor: Colors.transparent,
       ),
       child: Scaffold(
-        backgroundColor: const Color(0xFFF0F7F6),
+        backgroundColor: const Color(0xFFF9FAFB),
         body: Stack(
+          clipBehavior: Clip.hardEdge,
           children: [
+            const Positioned(
+              top: -26,
+              right: -28,
+              child: _TopRightDecor(),
+            ),
+            const Positioned(
+              left: 0,
+              bottom: 0,
+              child: _BottomLeftDecor(),
+            ),
             SafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -33,23 +46,46 @@ class LoginScreen extends StatelessWidget {
                     child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Image.asset(
+                            AppImages.splashLogo,
+                            width: 54 ,
+                            height: 54 ,
+                            fit: BoxFit.cover,
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'TRACKORA',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.cinzel(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: const Color(0xFF38847C),
+                              height: 1.1,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
                         'Welcome back',
-                        style: TextStyle(
-                          fontFamily: 'Inter_Bold',
-                          color: AppColors.textDark,
-                          fontSize: 30,
+                        style: GoogleFonts.manrope(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: -0.55,
+                          color: const Color(0xFF111827),
                           height: 1.2,
                         ),
                       ),
                       const SizedBox(height: 8),
-                      const Text(
-                        'Log in to manage your attendance and tasks.',
-                        style: TextStyle(
-                          fontFamily: 'Inter_Regular',
-                          color: AppColors.textGrey,
-                          fontSize: 14,
-                          height: 1.4,
+                       Text(
+                        'Sign in to continue to Trackora',
+                        style: GoogleFonts.manrope(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF6B7280),
                         ),
                       ),
                       const SizedBox(height: 28),
@@ -68,7 +104,7 @@ class LoginScreen extends StatelessWidget {
                         onSelected: login.selectRole,
                       ),
                       const SizedBox(height: 24),
-                      _LabeledField(
+                        _LabeledField(
                         label: 'Client Code',
                         controller: login.clientCode,
                         icon: Icons.badge_outlined,
@@ -108,59 +144,29 @@ class LoginScreen extends StatelessWidget {
                         child: TextButton(
                           onPressed: () {},
                           style: TextButton.styleFrom(
-                            foregroundColor: AppColors.appColor,
+                            foregroundColor: Color(0xff6B7280),
                             padding: EdgeInsets.zero,
                             minimumSize: Size.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
-                          child: const Text(
+                          child:  Text(
                             'Forgot Password?',
-                            style: TextStyle(
-                              fontFamily: 'Inter_SemiBold',
-                              fontSize: 13,
+                            style: GoogleFonts.manrope(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff6B7280),
                             ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 18),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 54,
-                        child: ElevatedButton(
-                          onPressed: login.isLoading
-                              ? null
-                              : () => login.onLogin(context),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.appColor,
-                            foregroundColor: Colors.white,
-                            disabledBackgroundColor: AppColors.appColor,
-                            elevation: 4,
-                            shadowColor: AppColors.appColor.withValues(alpha: 0.35),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                login.isLoading
-                                    ? 'Login....'
-                                    : login.loginButtonLabel,
-                                style: const TextStyle(
-                                  fontFamily: 'Inter_SemiBold',
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              const Icon(Icons.arrow_forward, size: 18),
-                            ],
-                          ),
-                        ),
+                      _LoginButton(
+                        label: login.isLoading ? 'Login....' : 'Login',
+                        isLoading: login.isLoading,
+                        onTap: () => login.onLogin(context),
                       ),
                       const SizedBox(height: 28),
-                      const Row(
+                      /*const Row(
                         children: [
                           Expanded(child: Divider(color: Color(0xFFD7DEDC))),
                           Padding(
@@ -207,15 +213,15 @@ class LoginScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 36),
+                      const SizedBox(height: 36),*/
                       Center(
                         child: Text.rich(
                           TextSpan(
                             text: 'New company? ',
-                            style: const TextStyle(
-                              fontFamily: 'Inter_Regular',
-                              color: AppColors.textGrey,
-                              fontSize: 14,
+                            style: GoogleFonts.manrope(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: Color(0xff6B7280),
                             ),
                             children: [
                               WidgetSpan(
@@ -228,12 +234,12 @@ class LoginScreen extends StatelessWidget {
                                       AppRoutes.signUpScreen,
                                     );
                                   },
-                                  child: const Text(
+                                  child:  Text(
                                     'Create an account',
-                                    style: TextStyle(
-                                      fontFamily: 'Inter_SemiBold',
-                                      color: AppColors.appColor,
-                                      fontSize: 14,
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xff1B6B63),
                                     ),
                                   ),
                                 ),
@@ -259,6 +265,135 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
+/// Figma: tilted ellipse (#92BCB7 @ 20%) clipped at the top-right corner.
+class _TopRightDecor extends StatelessWidget {
+  const _TopRightDecor();
+
+  static const _fill = Color(0xFF92BCB7);
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Transform.rotate(
+        angle: 0.17,
+        child: Container(
+          width: 134.43,
+          height: 77,
+          decoration: ShapeDecoration(
+            color: _fill.withValues(alpha: 0.2),
+            shape: const OvalBorder(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Figma: concentric quarter-circles anchored at bottom-left.
+class _BottomLeftDecor extends StatelessWidget {
+  const _BottomLeftDecor();
+
+  static const _outer = Color(0xFFE6F0EE);
+  static const _inner = Color(0xFF8FB3B0);
+  static const double _outerSize = 125;
+  static const double _innerSize = 90;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: SizedBox(
+        width: _outerSize,
+        height: _outerSize,
+        child: Stack(
+          alignment: Alignment.bottomLeft,
+          children: [
+            Container(
+              width: _outerSize,
+              height: _outerSize,
+              decoration: const BoxDecoration(
+                color: _outer,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(_outerSize),
+                ),
+              ),
+            ),
+            Container(
+              width: _innerSize,
+              height: _innerSize,
+              decoration: const BoxDecoration(
+                color: _inner,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(_innerSize),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LoginButton extends StatelessWidget {
+  const _LoginButton({
+    required this.label,
+    required this.isLoading,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isLoading;
+  final VoidCallback onTap;
+
+  static const _fill = Color(0xFF38847C);
+  static const _shadow = Color(0xFF1B6B63);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: isLoading ? null : onTap,
+      child: Container(
+        width: double.infinity,
+        height: 44,
+        decoration: BoxDecoration(
+          color: _fill,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: _shadow.withValues(alpha: 0.45),
+              offset: const Offset(0, 10),
+              blurRadius: 25,
+              spreadRadius: -4,
+            ),
+          ],
+        ),
+        alignment: Alignment.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              label,
+              style: GoogleFonts.manrope(
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+            if (!isLoading) ...[
+              const SizedBox(width: 8),
+              const Icon(
+                Icons.arrow_forward_rounded,
+                color: Colors.white,
+                size: 18,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _RoleSelector extends StatelessWidget {
   const _RoleSelector({
     required this.selected,
@@ -271,27 +406,48 @@ class _RoleSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: 45,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8EEEC),
-        borderRadius: BorderRadius.circular(14),
+        color: const Color(0xFFF9FAFB),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: const Color(0xFFE5E7EB).withValues(alpha: 0.90),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            offset: const Offset(0, 1),
+            blurRadius: 2,
+            spreadRadius: 0,
+          ),
+        ],
       ),
       child: Row(
         children: [
           _RoleChip(
             label: 'Admin',
+            icon: Icons.groups_outlined,
             selected: selected == LoginRole.admin,
             onTap: () => onSelected(LoginRole.admin),
+            showDividerAfter: selected != LoginRole.admin &&
+                selected != LoginRole.hr,
           ),
           _RoleChip(
             label: 'HR',
+            icon: Icons.groups_outlined,
             selected: selected == LoginRole.hr,
             onTap: () => onSelected(LoginRole.hr),
+            showDividerAfter: selected != LoginRole.hr &&
+                selected != LoginRole.user,
           ),
           _RoleChip(
             label: 'User',
+            icon: Icons.person_outline_rounded,
             selected: selected == LoginRole.user,
             onTap: () => onSelected(LoginRole.user),
+            showDividerAfter: false,
           ),
         ],
       ),
@@ -302,45 +458,87 @@ class _RoleSelector extends StatelessWidget {
 class _RoleChip extends StatelessWidget {
   const _RoleChip({
     required this.label,
+    required this.icon,
     required this.selected,
     required this.onTap,
+    required this.showDividerAfter,
   });
 
   final String label;
+  final IconData icon;
   final bool selected;
   final VoidCallback onTap;
+  final bool showDividerAfter;
+
+  static const _selectedBg = Color(0xFF3D9489);
+  static const _unselectedFg = Color(0xFF374151);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          curve: Curves.easeOut,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: selected ? AppColors.appColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(11),
-            boxShadow: selected
-                ? [
-                    BoxShadow(
-                      color: AppColors.appColor.withValues(alpha: 0.22),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+        behavior: HitTestBehavior.opaque,
+        child: Stack(
+          alignment: Alignment.centerRight,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOut,
+              height: 38,
+              margin: const EdgeInsets.symmetric(horizontal: 1),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                color: selected ? _selectedBg : Colors.transparent,
+                borderRadius: BorderRadius.circular(6),
+                boxShadow: selected
+                    ? [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          offset: const Offset(0, 1),
+                          blurRadius: 2,
+                          spreadRadius: 0,
+                        ),
+                      ]
+                    : null,
+              ),
+              alignment: Alignment.center,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    icon,
+                    size: 16,
+                    color: selected ? Colors.white : _unselectedFg,
+                  ),
+                  const SizedBox(width: 5),
+                  Flexible(
+                    child: Text(
+                      label,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.manrope(
+                        fontSize: 12,
+                        fontWeight:
+                            selected ? FontWeight.w700 : FontWeight.w600,
+                        color: selected ? Colors.white : _unselectedFg,
+                      ),
                     ),
-                  ]
-                : null,
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            label,
-            style: TextStyle(
-              fontFamily: selected ? 'Inter_SemiBold' : 'Inter_Medium',
-              color: selected ? Colors.white : AppColors.textGrey,
-              fontSize: 14,
+                  ),
+                ],
+              ),
             ),
-          ),
+            if (showDividerAfter)
+              Positioned(
+                right: 0,
+                top: 6,
+                bottom: 6,
+                child: Container(
+                  width: 1,
+                  color: const Color(0xFFE5E7EB),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -375,10 +573,10 @@ class _LabeledField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
-            fontFamily: 'Inter_SemiBold',
-            color: AppColors.appColor,
-            fontSize: 13,
+          style: GoogleFonts.manrope(
+            fontSize: 12,
+            fontWeight: FontWeight.w800,
+            color: Color(0xff374151),
           ),
         ),
         const SizedBox(height: 8),
@@ -389,17 +587,17 @@ class _LabeledField extends StatelessWidget {
           validator: validator,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           cursorColor: AppColors.appColor,
-          style: const TextStyle(
-            fontFamily: 'Inter_Medium',
-            color: AppColors.textDark,
-            fontSize: 15,
+          style: GoogleFonts.manrope(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff1F2937),
           ),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: const TextStyle(
-              fontFamily: 'Inter_Regular',
-              color: AppColors.textGrey,
-              fontSize: 15,
+            hintStyle:GoogleFonts.manrope(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff1F2937),
             ),
             prefixIcon: Icon(icon, color: AppColors.textGrey, size: 22),
             suffixIcon: suffix,

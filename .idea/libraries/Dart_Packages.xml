@@ -65,6 +65,13 @@
             </list>
           </value>
         </entry>
+        <entry key="change_app_package_name">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/change_app_package_name-1.5.0/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="characters">
           <value>
             <list>
@@ -212,6 +219,13 @@
             </list>
           </value>
         </entry>
+        <entry key="google_fonts">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/google_fonts-6.3.3/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="google_maps">
           <value>
             <list>
@@ -279,6 +293,13 @@
           <value>
             <list>
               <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/html-0.15.6/lib" />
+            </list>
+          </value>
+        </entry>
+        <entry key="http">
+          <value>
+            <list>
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/http-1.6.0/lib" />
             </list>
           </value>
         </entry>
@@ -355,7 +376,7 @@
         <entry key="matcher">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/matcher-0.12.19/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/matcher-0.12.20/lib" />
             </list>
           </value>
         </entry>
@@ -369,7 +390,7 @@
         <entry key="meta">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/meta-1.18.0/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/meta-1.19.0/lib" />
             </list>
           </value>
         </entry>
@@ -649,7 +670,7 @@
         <entry key="test_api">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.7.11/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.7.12/lib" />
             </list>
           </value>
         </entry>
@@ -670,7 +691,7 @@
         <entry key="vector_math">
           <value>
             <list>
-              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/vector_math-2.2.0/lib" />
+              <option value="$USER_HOME$/.pub-cache/hosted/pub.dev/vector_math-2.4.2/lib" />
             </list>
           </value>
         </entry>
@@ -714,6 +735,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/camera_avfoundation-0.10.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/camera_platform_interface-2.13.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/camera_web-0.3.5+5/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/change_app_package_name-1.5.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/characters-1.4.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/clock-1.1.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/code_assets-1.2.1/lib" />
@@ -732,6 +754,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/fluttertoast-10.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/get-4.7.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/get_storage-2.1.1/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_fonts-6.3.3/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_maps-8.3.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_maps_flutter-2.18.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_maps_flutter_android-2.19.12/lib" />
@@ -742,6 +765,7 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/google_mlkit_face_detection-0.15.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/hooks-2.0.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/html-0.15.6/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/http-1.6.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/http_parser-4.1.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/image-4.9.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/jni-1.0.3/lib" />
@@ -752,9 +776,9 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/leak_tracker_testing-3.0.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/lints-6.1.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/logging-1.3.0/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/matcher-0.12.19/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/matcher-0.12.20/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/material_color_utilities-0.13.0/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/meta-1.18.0/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/meta-1.19.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/mime-2.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/nested-1.0.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/objective_c-9.5.0/lib" />
@@ -793,10 +817,10 @@
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/stream_transform-2.1.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/string_scanner-1.4.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/term_glyph-1.2.2/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.7.11/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/test_api-0.7.12/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/tflite_flutter-0.12.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/typed_data-1.4.0/lib" />
-      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/vector_math-2.2.0/lib" />
+      <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/vector_math-2.4.2/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/vm_service-15.3.0/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/web-1.1.1/lib" />
       <root url="file://$USER_HOME$/.pub-cache/hosted/pub.dev/xdg_directories-1.1.0/lib" />
