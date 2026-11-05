@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -500,6 +502,629 @@ class _TaskStat extends StatelessWidget {
   }
 }
 
+
+const _punchGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: [Color(0xFF46998F), Color(0xFF2F7A72), Color(0xFF23635C)],
+);
+
+const _liveGreen = Color(0xFF7DFFB3);
+
+/// Common gradient card. Ek hi AnimationController (6s loop) sab animations
+/// ko drive karta hai. Saari periods 6s ko divide karti hain, isliye loop
+/// seamless rehta hai.
+class _PunchShell extends StatefulWidget {
+  const _PunchShell({required this.builder});
+
+  final Widget Function(BuildContext context, Animation<double> t) builder;
+
+  @override
+  State<_PunchShell> createState() => _PunchShellState();
+}
+
+class _PunchShellState extends State<_PunchShell>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 6),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // RepaintBoundary: card ki animation ki wajah se poori screen repaint nahi hogi.
+    return RepaintBoundary(
+      child: Container(
+        width: double.infinity,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(
+          gradient: _punchGradient,
+          borderRadius: BorderRadius.circular(22),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF1B6B63).withValues(alpha: 0.28),
+              blurRadius: 18,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            _Bubble(t: _c, size: 120, right: -36, top: -34, phase: 0),
+            _Bubble(t: _c, size: 64, left: -18, bottom: -20, phase: 0.33),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(18, 16, 18, 16),
+              child: widget.builder(context, _c),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Bubble extends StatelessWidget {
+  const _Bubble({
+    required this.t,
+    required this.size,
+    required this.phase,
+    this.left,
+    this.right,
+    this.top,
+    this.bottom,
+  });
+
+  final Animation<double> t;
+  final double size;
+  final double phase;
+  final double? left, right, top, bottom;
+
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      left: left,
+      right: right,
+      top: top,
+      bottom: bottom,
+      child: AnimatedBuilder(
+        animation: t,
+        builder: (_, child) => Transform.translate(
+          offset: Offset(0, -8 * math.sin((t.value + phase) * 2 * math.pi)),
+          child: child,
+        ),
+        child: Container(
+          width: size,
+          height: size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white.withValues(alpha: 0.08),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Button/pill ke upar se guzarne wali halki chamak.
+class _Shine extends StatelessWidget {
+  const _Shine({required this.t});
+
+  final Animation<double> t;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: FractionallySizedBox(
+          widthFactor: 0.3,
+          heightFactor: 1,
+          child: AnimatedBuilder(
+            animation: t,
+            builder: (_, child) {
+              final v = (((t.value * 2) % 1) / 0.6).clamp(0.0, 1.0);
+              return FractionalTranslation(
+                translation: Offset(-1 + 4.4 * v, 0),
+                child: child,
+              );
+            },
+            child: const DecoratedBox(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0x00FFFFFF),
+                    Color(0x66FFFFFF),
+                    Color(0x00FFFFFF),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _Ripple extends StatelessWidget {
+  const _Ripple({required this.t, required this.shift});
+
+  final Animation<double> t;
+  final double shift;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: t,
+      builder: (_, __) {
+        final v = (t.value * 3 + shift) % 1;
+        return Transform.scale(
+          scale: 1 + 0.7 * v,
+          child: Container(
+            width: 76,
+            height: 76,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withValues(alpha: 0.5 * (1 - v)),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _LiveDot extends StatelessWidget {
+  const _LiveDot({required this.t});
+
+  final Animation<double> t;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: t,
+      builder: (_, __) {
+        final v = (t.value * 4) % 1;
+        return Container(
+          width: 9,
+          height: 9,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _liveGreen,
+            boxShadow: [
+              BoxShadow(
+                color: _liveGreen.withValues(alpha: 0.7 * (1 - v)),
+                spreadRadius: 10 * v,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Punched-in card ke right side ki ghoomti hui ring + icon.
+class _RingBadge extends StatelessWidget {
+  const _RingBadge({required this.t});
+
+  final Animation<double> t;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 76,
+      height: 76,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          AnimatedBuilder(
+            animation: t,
+            builder: (_, __) => CustomPaint(
+              size: const Size(76, 76),
+              painter: _ArcPainter((t.value * 2) % 1),
+            ),
+          ),
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withValues(alpha: 0.16),
+            ),
+            child: const Icon(Icons.timer_outlined, color: Colors.white, size: 26),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ArcPainter extends CustomPainter {
+  _ArcPainter(this.turn);
+
+  final double turn;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = (Offset.zero & size).deflate(3);
+    final track = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 5
+      ..color = Colors.white.withValues(alpha: 0.18);
+    final arc = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 5
+      ..strokeCap = StrokeCap.round
+      ..color = _liveGreen;
+    canvas.drawArc(rect, 0, math.pi * 2, false, track);
+    canvas.drawArc(
+      rect,
+      -math.pi / 2 + math.pi * 2 * turn,
+      math.pi * 0.7,
+      false,
+      arc,
+    );
+  }
+
+  @override
+  bool shouldRepaint(_ArcPainter old) => old.turn != turn;
+}
+
+/// Punched-out card ka check badge: pop hota hai, phir check draw hota hai (ek baar).
+class _CheckBadge extends StatefulWidget {
+  const _CheckBadge();
+
+  @override
+  State<_CheckBadge> createState() => _CheckBadgeState();
+}
+
+class _CheckBadgeState extends State<_CheckBadge> with SingleTickerProviderStateMixin {
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  )..forward();
+
+  @override
+  void dispose() {
+    _c.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _c,
+      builder: (_, __) {
+        final pop = Curves.easeOutBack.transform((_c.value / 0.5).clamp(0.0, 1.0));
+        final draw = Curves.easeOut.transform(((_c.value - 0.4) / 0.6).clamp(0.0, 1.0));
+        return Transform.scale(
+          scale: pop,
+          child: Container(
+            width: 76,
+            height: 76,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withValues(alpha: 0.18),
+            ),
+            child: CustomPaint(painter: _CheckPainter(draw)),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _CheckPainter extends CustomPainter {
+  _CheckPainter(this.progress);
+
+  final double progress;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final path = Path()
+      ..moveTo(size.width * 0.28, size.height * 0.52)
+      ..lineTo(size.width * 0.44, size.height * 0.67)
+      ..lineTo(size.width * 0.72, size.height * 0.36);
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4
+      ..strokeCap = StrokeCap.round
+      ..strokeJoin = StrokeJoin.round
+      ..color = _liveGreen;
+    for (final m in path.computeMetrics()) {
+      canvas.drawPath(m.extractPath(0, m.length * progress), paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CheckPainter old) => old.progress != progress;
+}
+
+// ───────────────────────── 1) NOT PUNCHED IN ─────────────────────────
+
+class _NotPunchedInCard extends StatelessWidget {
+  const _NotPunchedInCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return _PunchShell(
+      builder: (context, t) => Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Not Punched In',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w800,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Please punch in to start your day',
+                  style: GoogleFonts.manrope(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white.withValues(alpha: 0.92),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          SizedBox(
+            width: 76,
+            height: 76,
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [
+                _Ripple(t: t, shift: 0),
+                _Ripple(t: t, shift: 0.5),
+                Material(
+                  color: Colors.white,
+                  shape: const CircleBorder(),
+                  elevation: 6,
+                  shadowColor: Colors.black38,
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRoutes.faceVerify);
+                    },
+                    child: SizedBox(
+                      width: 76,
+                      height: 76,
+                      child: ClipOval(
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            const Center(
+                              child: Icon(
+                                Icons.fingerprint,
+                                size: 40,
+                                color: AppColors.appColor,
+                              ),
+                            ),
+                            _Shine(t: t),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ───────────────────────── 2) PUNCHED IN ─────────────────────────
+
+class _PunchedInCard extends StatelessWidget {
+  const _PunchedInCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return _PunchShell(
+      builder: (context, t) => Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        _LiveDot(t: t),
+                        const SizedBox(width: 8),
+                        Text(
+                          'PUNCHED IN',
+                          style: GoogleFonts.manrope(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                            letterSpacing: 1.1,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 6),
+                    // Consumer sirf in 2 Text ko rebuild karta hai (har second),
+                    // poora card nahi.
+                    Consumer<HomeProvider>(
+                      builder: (_, home, __) => Text(
+                        home.punchInClock,
+                        style: GoogleFonts.manrope(
+                          fontSize: 34,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          letterSpacing: 0.5,
+                          height: 1.1,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Consumer<HomeProvider>(
+                      builder: (_, home, __) => Text(
+                        'Working ${home.workingDuration}',
+                        style: GoogleFonts.manrope(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                          fontFeatures: const [FontFeature.tabularFigures()],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              _RingBadge(t: t),
+            ],
+          ),
+          const SizedBox(height: 14),
+          SizedBox(
+            width: double.infinity,
+            height: 44,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.faceVerify);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: AppColors.appColor,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    icon: const Icon(Icons.timer_outlined, size: 20),
+                    label: Text(
+                      'PUNCH OUT',
+                      style: GoogleFonts.manrope(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.8,
+                      ),
+                    ),
+                  ),
+                  _Shine(t: t),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ───────────────────────── 3) PUNCHED OUT ─────────────────────────
+
+class _PunchedOutCard extends StatelessWidget {
+  const _PunchedOutCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return _PunchShell(
+      builder: (context, t) => Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.circle, color: _liveGreen, size: 9),
+                    const SizedBox(width: 8),
+                    Text(
+                      'PUNCHED OUT',
+                      style: GoogleFonts.manrope(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                        letterSpacing: 1.1,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 6),
+                Consumer<HomeProvider>(
+                  builder: (_, home, __) => Text(
+                    home.punchOutClock,
+                    style: GoogleFonts.manrope(
+                      fontSize: 34,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                      height: 1.1,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Consumer<HomeProvider>(
+                  builder: (_, home, __) => Text(
+                    'Worked ${home.workingDuration}',
+                    style: GoogleFonts.manrope(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.16),
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.45),
+                    ),
+                  ),
+                  child: Text(
+                    'DAY CLOSED',
+                    style: GoogleFonts.manrope(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(width: 12),
+          const _CheckBadge(),
+        ],
+      ),
+    );
+  }
+}
+
 class _PunchInCard extends StatelessWidget {
   const _PunchInCard();
 
@@ -521,253 +1146,253 @@ class _PunchInCard extends StatelessWidget {
   }
 }
 
-class _PunchedInCard extends StatelessWidget {
-  const _PunchedInCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final home = context.watch<HomeProvider>();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
-      decoration: BoxDecoration(
-        color: AppColors.appColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.circle, color: Color(0xFF7DFFB3), size: 10),
-              SizedBox(width: 8),
-              Text(
-                'PUNCHED IN',
-                style: GoogleFonts.manrope(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.1,
-
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 18),
-          Text(
-            home.punchInClock,
-            style: GoogleFonts.manrope(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              letterSpacing: 1,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Working ${home.workingDuration}',
-            style: GoogleFonts.manrope(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 22),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton.icon(
-              onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.faceVerify);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.white,
-                foregroundColor: AppColors.appColor,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
-                ),
-              ),
-              icon: const Icon(Icons.timer_outlined, size: 20),
-              label:  Text(
-                'PUNCH OUT',
-                style: GoogleFonts.manrope(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: 0.8,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PunchedOutCard extends StatelessWidget {
-  const _PunchedOutCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final home = context.watch<HomeProvider>();
-
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
-      decoration: BoxDecoration(
-        color: AppColors.appColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Column(
-        children: [
-           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.circle, color: Color(0xFF7DFFB3), size: 10),
-              SizedBox(width: 8),
-              Text(
-                'PUNCHED OUT',
-                style: GoogleFonts.manrope(
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                  letterSpacing: 1.1,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 18),
-          Text(
-            home.punchOutClock,
-            style: GoogleFonts.manrope(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              letterSpacing: 1,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Worked ${home.workingDuration}',
-            style: GoogleFonts.manrope(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-
-            ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.16),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.45)),
-            ),
-            child:  Text(
-              'DAY CLOSED',
-              style: GoogleFonts.manrope(
-                fontSize: 12,
-                fontWeight: FontWeight.w700,
-                color: Colors.black,
-                letterSpacing: 1.1,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _NotPunchedInCard extends StatelessWidget {
-  const _NotPunchedInCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final home = context.watch<HomeProvider>();
-
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.cardWhite,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-            child: Image.asset(
-              home.bannerImage,
-              height: 150,
-              width: double.infinity,
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-            child: Column(
-              children: [
-                 Text(
-                  'Not Punched In',
-                  style: GoogleFonts.plusJakartaSans(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textDark,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                 Text(
-                  'Please punch in to start your day',
-                  style: GoogleFonts.manrope(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textGrey,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                SizedBox(
-                  width: double.infinity,
-                  height: 48,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pushNamed(context, AppRoutes.faceVerify);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.appColor,
-                      foregroundColor: Colors.white,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    icon: const Icon(Icons.fingerprint, size: 22),
-                    label:  Text(
-                      'PUNCH IN',
-                      style: GoogleFonts.manrope(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+// class _PunchedInCard extends StatelessWidget {
+//   const _PunchedInCard();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final home = context.watch<HomeProvider>();
+//
+//     return Container(
+//       width: double.infinity,
+//       padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
+//       decoration: BoxDecoration(
+//         color: AppColors.appColor,
+//         borderRadius: BorderRadius.circular(20),
+//       ),
+//       child: Column(
+//         children: [
+//            Row(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               Icon(Icons.circle, color: Color(0xFF7DFFB3), size: 10),
+//               SizedBox(width: 8),
+//               Text(
+//                 'PUNCHED IN',
+//                 style: GoogleFonts.manrope(
+//                   fontSize: 13,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.white,
+//                   letterSpacing: 1.1,
+//
+//                 ),
+//               ),
+//             ],
+//           ),
+//           const SizedBox(height: 18),
+//           Text(
+//             home.punchInClock,
+//             style: GoogleFonts.manrope(
+//               fontSize: 40,
+//               fontWeight: FontWeight.bold,
+//               color: Colors.white,
+//               letterSpacing: 1,
+//             ),
+//           ),
+//           const SizedBox(height: 8),
+//           Text(
+//             'Working ${home.workingDuration}',
+//             style: GoogleFonts.manrope(
+//               fontSize: 14,
+//               fontWeight: FontWeight.w400,
+//               color: Colors.white,
+//             ),
+//           ),
+//           const SizedBox(height: 22),
+//           SizedBox(
+//             width: double.infinity,
+//             height: 48,
+//             child: ElevatedButton.icon(
+//               onPressed: () {
+//                 Navigator.pushNamed(context, AppRoutes.faceVerify);
+//               },
+//               style: ElevatedButton.styleFrom(
+//                 backgroundColor: Colors.white,
+//                 foregroundColor: AppColors.appColor,
+//                 elevation: 0,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(24),
+//                 ),
+//               ),
+//               icon: const Icon(Icons.timer_outlined, size: 20),
+//               label:  Text(
+//                 'PUNCH OUT',
+//                 style: GoogleFonts.manrope(
+//                   fontSize: 14,
+//                   fontWeight: FontWeight.w700,
+//                   letterSpacing: 0.8,
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+// class _PunchedOutCard extends StatelessWidget {
+//   const _PunchedOutCard();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final home = context.watch<HomeProvider>();
+//
+//     return Container(
+//       width: double.infinity,
+//       padding: const EdgeInsets.fromLTRB(20, 22, 20, 20),
+//       decoration: BoxDecoration(
+//         color: AppColors.appColor,
+//         borderRadius: BorderRadius.circular(20),
+//       ),
+//       child: Column(
+//         children: [
+//            Row(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               Icon(Icons.circle, color: Color(0xFF7DFFB3), size: 10),
+//               SizedBox(width: 8),
+//               Text(
+//                 'PUNCHED OUT',
+//                 style: GoogleFonts.manrope(
+//                   fontSize: 13,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.white,
+//                   letterSpacing: 1.1,
+//                 ),
+//               ),
+//             ],
+//           ),
+//           const SizedBox(height: 18),
+//           Text(
+//             home.punchOutClock,
+//             style: GoogleFonts.manrope(
+//               fontSize: 40,
+//               fontWeight: FontWeight.bold,
+//               color: Colors.white,
+//               letterSpacing: 1,
+//             ),
+//           ),
+//           const SizedBox(height: 8),
+//           Text(
+//             'Worked ${home.workingDuration}',
+//             style: GoogleFonts.manrope(
+//               fontSize: 14,
+//               fontWeight: FontWeight.w400,
+//               color: Colors.white,
+//
+//             ),
+//           ),
+//           const SizedBox(height: 16),
+//           Container(
+//             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+//             decoration: BoxDecoration(
+//               color: Colors.white.withValues(alpha: 0.16),
+//               borderRadius: BorderRadius.circular(20),
+//               border: Border.all(color: Colors.white.withValues(alpha: 0.45)),
+//             ),
+//             child:  Text(
+//               'DAY CLOSED',
+//               style: GoogleFonts.manrope(
+//                 fontSize: 12,
+//                 fontWeight: FontWeight.w700,
+//                 color: Colors.black,
+//                 letterSpacing: 1.1,
+//               ),
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+//
+// class _NotPunchedInCard extends StatelessWidget {
+//   const _NotPunchedInCard();
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final home = context.watch<HomeProvider>();
+//
+//     return Container(
+//       decoration: BoxDecoration(
+//         color: AppColors.cardWhite,
+//         borderRadius: BorderRadius.circular(16),
+//         boxShadow: [
+//           BoxShadow(
+//             color: Colors.black.withValues(alpha: 0.06),
+//             blurRadius: 12,
+//             offset: const Offset(0, 4),
+//           ),
+//         ],
+//       ),
+//       child: Column(
+//         children: [
+//           ClipRRect(
+//             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+//             child: Image.asset(
+//               home.bannerImage,
+//               height: 150,
+//               width: double.infinity,
+//               fit: BoxFit.cover,
+//             ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+//             child: Column(
+//               children: [
+//                  Text(
+//                   'Not Punched In',
+//                   style: GoogleFonts.plusJakartaSans(
+//                     fontSize: 18,
+//                     fontWeight: FontWeight.bold,
+//                     color: AppColors.textDark,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 4),
+//                  Text(
+//                   'Please punch in to start your day',
+//                   style: GoogleFonts.manrope(
+//                     fontSize: 13,
+//                     fontWeight: FontWeight.w600,
+//                     color: AppColors.textGrey,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 16),
+//                 SizedBox(
+//                   width: double.infinity,
+//                   height: 48,
+//                   child: ElevatedButton.icon(
+//                     onPressed: () {
+//                       Navigator.pushNamed(context, AppRoutes.faceVerify);
+//                     },
+//                     style: ElevatedButton.styleFrom(
+//                       backgroundColor: AppColors.appColor,
+//                       foregroundColor: Colors.white,
+//                       elevation: 0,
+//                       shape: RoundedRectangleBorder(
+//                         borderRadius: BorderRadius.circular(10),
+//                       ),
+//                     ),
+//                     icon: const Icon(Icons.fingerprint, size: 22),
+//                     label:  Text(
+//                       'PUNCH IN',
+//                       style: GoogleFonts.manrope(
+//                         fontSize: 14,
+//                         fontWeight: FontWeight.w700,
+//                         letterSpacing: 0.8,
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class _LeaveBalancesSection extends StatelessWidget {
   const _LeaveBalancesSection();

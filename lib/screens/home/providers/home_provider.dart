@@ -14,9 +14,6 @@ enum DayPeriod { morning, afternoon, evening }
 class HomeProvider extends ChangeNotifier {
   String userName = '';
   int notificationCount = 3;
-  double targetPercent = 0.78;
-  String targetDone = '₹7,80,000';
-  String targetTotal = '₹10,00,000';
   bool isPunchedIn = false;
   DateTime? punchedInAt;
   DateTime? punchedOutAt;

@@ -11,7 +11,7 @@ import 'package:trackora/data/models/employee_model.dart';
 class AttendanceProvider extends ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
-  DateTime? punchedOutAt;
+  // DateTime? punchedOutAt;
   List<AttendanceModel> attendanceList = [];
   List<AttendanceModel> attendanceTableList = [];
   AttendanceModel? currentAttendance;
